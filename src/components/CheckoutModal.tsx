@@ -55,13 +55,6 @@ const CheckoutModal = ({ open, onClose }: CheckoutModalProps) => {
 
   const checkPaymentStatus = async (transactionId: string) => {
     try {
-      const { data, error } = await supabase.functions.invoke("check-pix", {
-        body: {},
-        headers: {},
-      });
-
-      // Use query params via direct fetch instead
-      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
       const url = import.meta.env.VITE_SUPABASE_URL;
       const anonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
