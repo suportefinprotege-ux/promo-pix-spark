@@ -334,13 +334,22 @@ const CheckoutPage = () => {
           <div className="space-y-4">
             <div>
               <label className="text-sm font-semibold text-foreground block mb-1.5">CEP</label>
-              <input
-                type="text"
-                value={cep}
-                onChange={(e) => setCep(e.target.value.replace(/\D/g, "").slice(0, 8))}
-                className="w-full border border-border rounded-xl px-4 py-3 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring"
-                placeholder="00000-000"
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={cep}
+                  onChange={(e) => {
+                    const v = e.target.value.replace(/\D/g, "").slice(0, 8);
+                    setCep(v);
+                    fetchCep(v);
+                  }}
+                  className="w-full border border-border rounded-xl px-4 py-3 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring"
+                  placeholder="00000-000"
+                />
+                {loadingCep && (
+                  <Loader2 className="w-4 h-4 animate-spin text-muted-foreground absolute right-3 top-3.5" />
+                )}
+              </div>
             </div>
             <div>
               <label className="text-sm font-semibold text-foreground block mb-1.5">Endereço</label>
