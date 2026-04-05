@@ -28,11 +28,31 @@ const CheckoutPage = () => {
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const [cep, setCep] = useState("");
+  const [loadingCep, setLoadingCep] = useState(false);
   const [endereco, setEndereco] = useState("");
   const [numero, setNumero] = useState("");
   const [bairro, setBairro] = useState("");
   const [cidade, setCidade] = useState("");
   const [estado, setEstado] = useState("");
+
+  const fetchCep = async (cepValue: string) => {
+    if (cepValue.length !== 8) return;
+    setLoadingCep(true);
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${cepValue}/json/`);
+      const data = await res.json();
+      if (!data.erro) {
+        setEndereco(data.logradouro || "");
+        setBairro(data.bairro || "");
+        setCidade(data.localidade || "");
+        setEstado(data.uf || "");
+      }
+    } catch (err) {
+      console.error("Erro ao buscar CEP:", err);
+    } finally {
+      setLoadingCep(false);
+    }
+  };
 
   const handleCopy = () => {
     if (pixData?.qr_code) {
