@@ -1,18 +1,15 @@
-import { ChevronLeft, Search, Share2, ShoppingCart, MoreHorizontal } from "lucide-react";
+import { ArrowLeft, Search, ShoppingCart, MoreHorizontal } from "lucide-react";
 
 const TopHeader = () => {
   return (
     <div className="sticky top-0 z-30 bg-background flex items-center gap-2 px-3 py-2 border-b border-border">
       <button className="p-1 text-foreground flex-shrink-0">
-        <ChevronLeft className="w-6 h-6" />
+        <ArrowLeft className="w-6 h-6" />
       </button>
       <div className="flex-1 flex items-center bg-secondary rounded-lg px-3 py-1.5 gap-2">
         <Search className="w-4 h-4 text-muted-foreground flex-shrink-0" />
         <span className="text-sm text-muted-foreground">Kit Pratos Oxford</span>
       </div>
-      <button className="p-1 text-foreground flex-shrink-0">
-        <Share2 className="w-5 h-5" />
-      </button>
       <button className="p-1 text-foreground flex-shrink-0 relative">
         <ShoppingCart className="w-5 h-5" />
       </button>
