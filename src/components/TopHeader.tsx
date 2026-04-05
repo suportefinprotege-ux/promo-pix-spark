@@ -1,4 +1,4 @@
-import { ArrowLeft, Search, Forward, ShoppingCart, MoreHorizontal } from "lucide-react";
+import { ArrowLeft, Search, Share, ShoppingCart, MoreHorizontal } from "lucide-react";
 
 const TopHeader = () => {
   return (
