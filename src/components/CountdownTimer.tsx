@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 const CountdownTimer = () => {
-  const [seconds, setSeconds] = useState(299); // 4:59
+  const [seconds, setSeconds] = useState(185); // ~3 min
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -10,15 +10,13 @@ const CountdownTimer = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const hrs = "00";
   const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
   const secs = String(seconds % 60).padStart(2, "0");
 
   return (
-    <div className="flex items-center gap-2 bg-foreground text-primary-foreground rounded-md px-3 py-1.5 text-sm font-semibold">
-      <span>⚡ Oferta Relâmpago</span>
-      <span className="ml-auto font-mono">
-        00:{mins}:{secs}
-      </span>
+    <div className="border border-sale text-sale rounded px-2.5 py-1 text-xs font-bold whitespace-nowrap">
+      TERMINA EM {hrs}:{mins}:{secs}
     </div>
   );
 };
