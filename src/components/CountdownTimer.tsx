@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
-const CountdownTimer = () => {
+const CountdownTimer: React.FC = () => {
   const [seconds, setSeconds] = useState(185); // ~3 min
 
   useEffect(() => {
