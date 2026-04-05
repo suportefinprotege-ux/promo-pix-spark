@@ -10,11 +10,9 @@ import StoreInfo from "@/components/StoreInfo";
 import ProductDescription from "@/components/ProductDescription";
 import BottomBar from "@/components/BottomBar";
 import BuyConfirmSheet from "@/components/BuyConfirmSheet";
-import CheckoutModal from "@/components/CheckoutModal";
 
 const Index = () => {
   const [buySheetOpen, setBuySheetOpen] = useState(false);
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background max-w-lg mx-auto pb-16">
@@ -36,9 +34,7 @@ const Index = () => {
       <BuyConfirmSheet
         open={buySheetOpen}
         onClose={() => setBuySheetOpen(false)}
-        onConfirm={() => setCheckoutOpen(true)}
       />
-      <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </div>
   );
 };
