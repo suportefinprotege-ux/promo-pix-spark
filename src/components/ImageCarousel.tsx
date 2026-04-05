@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 const IMAGES = [
   "https://panpannovapromo.site/ofertas/pratos/images/img1.jpg",
@@ -10,12 +10,28 @@ const IMAGES = [
   "https://panpannovapromo.site/ofertas/pratos/images/img7.jpg",
 ];
 
+const AUTO_PLAY_INTERVAL = 3000;
+
 const ImageCarousel = () => {
   const [current, setCurrent] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const resetTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % IMAGES.length);
+    }, AUTO_PLAY_INTERVAL);
+  }, []);
+
+  useEffect(() => {
+    resetTimer();
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [resetTimer]);
   const [touchStart, setTouchStart] = useState<number | null>(null);
 
   const goTo = (idx: number) => {
     setCurrent(Math.max(0, Math.min(idx, IMAGES.length - 1)));
+    resetTimer();
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
