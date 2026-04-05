@@ -1,9 +1,9 @@
 import { X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface BuyConfirmSheetProps {
   open: boolean;
   onClose: () => void;
-  onConfirm: () => void;
 }
 
 const BuyConfirmSheet = ({ open, onClose, onConfirm }: BuyConfirmSheetProps) => {
