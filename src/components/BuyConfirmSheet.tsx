@@ -6,7 +6,9 @@ interface BuyConfirmSheetProps {
   onClose: () => void;
 }
 
-const BuyConfirmSheet = ({ open, onClose, onConfirm }: BuyConfirmSheetProps) => {
+const BuyConfirmSheet = ({ open, onClose }: BuyConfirmSheetProps) => {
+  const navigate = useNavigate();
+
   if (!open) return null;
 
   return (
@@ -17,7 +19,6 @@ const BuyConfirmSheet = ({ open, onClose, onConfirm }: BuyConfirmSheetProps) => 
           <X className="w-6 h-6" />
         </button>
 
-        {/* Product summary */}
         <div className="flex items-center gap-4 pb-5">
           <img
             src="https://panpannovapromo.site/ofertas/pratos/images/img1.jpg"
@@ -35,11 +36,10 @@ const BuyConfirmSheet = ({ open, onClose, onConfirm }: BuyConfirmSheetProps) => 
           </div>
         </div>
 
-        {/* Buy button */}
         <button
           onClick={() => {
             onClose();
-            onConfirm();
+            navigate("/checkout");
           }}
           className="w-full bg-sale text-white font-bold py-4 rounded-2xl text-lg flex flex-col items-center leading-tight"
         >
