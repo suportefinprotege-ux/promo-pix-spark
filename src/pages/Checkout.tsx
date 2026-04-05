@@ -28,11 +28,31 @@ const CheckoutPage = () => {
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const [cep, setCep] = useState("");
+  const [loadingCep, setLoadingCep] = useState(false);
   const [endereco, setEndereco] = useState("");
   const [numero, setNumero] = useState("");
   const [bairro, setBairro] = useState("");
   const [cidade, setCidade] = useState("");
   const [estado, setEstado] = useState("");
+
+  const fetchCep = async (cepValue: string) => {
+    if (cepValue.length !== 8) return;
+    setLoadingCep(true);
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${cepValue}/json/`);
+      const data = await res.json();
+      if (!data.erro) {
+        setEndereco(data.logradouro || "");
+        setBairro(data.bairro || "");
+        setCidade(data.localidade || "");
+        setEstado(data.uf || "");
+      }
+    } catch (err) {
+      console.error("Erro ao buscar CEP:", err);
+    } finally {
+      setLoadingCep(false);
+    }
+  };
 
   const handleCopy = () => {
     if (pixData?.qr_code) {
@@ -314,13 +334,22 @@ const CheckoutPage = () => {
           <div className="space-y-4">
             <div>
               <label className="text-sm font-semibold text-foreground block mb-1.5">CEP</label>
-              <input
-                type="text"
-                value={cep}
-                onChange={(e) => setCep(e.target.value.replace(/\D/g, "").slice(0, 8))}
-                className="w-full border border-border rounded-xl px-4 py-3 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring"
-                placeholder="00000-000"
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={cep}
+                  onChange={(e) => {
+                    const v = e.target.value.replace(/\D/g, "").slice(0, 8);
+                    setCep(v);
+                    fetchCep(v);
+                  }}
+                  className="w-full border border-border rounded-xl px-4 py-3 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring"
+                  placeholder="00000-000"
+                />
+                {loadingCep && (
+                  <Loader2 className="w-4 h-4 animate-spin text-muted-foreground absolute right-3 top-3.5" />
+                )}
+              </div>
             </div>
             <div>
               <label className="text-sm font-semibold text-foreground block mb-1.5">Endereço</label>
