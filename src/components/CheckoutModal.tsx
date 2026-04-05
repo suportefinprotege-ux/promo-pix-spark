@@ -137,7 +137,7 @@ const CheckoutModal = ({ open, onClose }: CheckoutModalProps) => {
         {/* Header - TikTok style */}
         <div className="bg-background px-4 py-3 flex items-center justify-between rounded-t-2xl">
           <div className="flex items-center gap-2">
-            <span className="text-xl font-extrabold text-foreground tracking-tight">TikTok</span>
+            <img src={tiktokLogo} alt="TikTok" className="h-6 object-contain" />
           </div>
           <div className="flex items-center gap-1.5">
             <ShieldCheck className="w-4 h-4 text-success" />
