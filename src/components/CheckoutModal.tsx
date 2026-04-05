@@ -150,10 +150,10 @@ const CheckoutModal = ({ open, onClose }: CheckoutModalProps) => {
 
         {paymentStatus === "paid" ? (
           <div className="text-center py-8 space-y-4">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-              <Check className="w-8 h-8 text-green-600" />
+            <div className="w-16 h-16 bg-success/20 rounded-full flex items-center justify-center mx-auto">
+              <Check className="w-8 h-8 text-success" />
             </div>
-            <h3 className="text-xl font-bold text-green-600">Pagamento Confirmado!</h3>
+            <h3 className="text-xl font-bold text-success">Pagamento Confirmado!</h3>
             <p className="text-sm text-muted-foreground">
               Seu pagamento foi recebido com sucesso. Você receberá os detalhes do pedido em breve.
             </p>
