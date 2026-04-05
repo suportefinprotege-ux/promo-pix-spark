@@ -1,16 +1,39 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import TopHeader from "@/components/TopHeader";
+import ImageCarousel from "@/components/ImageCarousel";
+import PriceSection from "@/components/PriceSection";
+import ProductInfo from "@/components/ProductInfo";
+import ShippingInfo from "@/components/ShippingInfo";
+import ProductOptions from "@/components/ProductOptions";
+import CustomerReviews from "@/components/CustomerReviews";
+import StoreInfo from "@/components/StoreInfo";
+import ProductDescription from "@/components/ProductDescription";
+import BottomBar from "@/components/BottomBar";
+import CheckoutModal from "@/components/CheckoutModal";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+const Index = () => {
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
+    <div className="min-h-screen bg-background max-w-lg mx-auto pb-16">
+      <TopHeader />
+      <ImageCarousel />
+      <PriceSection />
+      <div className="h-2 bg-secondary" />
+      <ProductInfo />
+      <div className="h-2 bg-secondary" />
+      <ShippingInfo />
+      <div className="h-2 bg-secondary" />
+      <ProductOptions />
+      <div className="h-2 bg-secondary" />
+      <StoreInfo />
+      <ProductDescription />
+      <div className="h-2 bg-secondary" />
+      <CustomerReviews />
+      <BottomBar onBuy={() => setCheckoutOpen(true)} />
+      <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </div>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
