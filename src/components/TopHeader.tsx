@@ -10,6 +10,9 @@ const TopHeader = () => {
         <Search className="w-4 h-4 text-muted-foreground flex-shrink-0" />
         <span className="text-sm text-muted-foreground">Kit Pratos Oxford</span>
       </div>
+      <button className="p-1 text-foreground flex-shrink-0">
+        <ExternalLink className="w-5 h-5" />
+      </button>
       <button className="p-1 text-foreground flex-shrink-0 relative">
         <ShoppingCart className="w-5 h-5" />
       </button>
