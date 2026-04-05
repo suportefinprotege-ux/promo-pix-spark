@@ -9,9 +9,11 @@ import CustomerReviews from "@/components/CustomerReviews";
 import StoreInfo from "@/components/StoreInfo";
 import ProductDescription from "@/components/ProductDescription";
 import BottomBar from "@/components/BottomBar";
+import BuyConfirmSheet from "@/components/BuyConfirmSheet";
 import CheckoutModal from "@/components/CheckoutModal";
 
 const Index = () => {
+  const [buySheetOpen, setBuySheetOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   return (
@@ -30,7 +32,12 @@ const Index = () => {
       <ProductDescription />
       <div className="h-2 bg-secondary" />
       <CustomerReviews />
-      <BottomBar onBuy={() => setCheckoutOpen(true)} />
+      <BottomBar onBuy={() => setBuySheetOpen(true)} />
+      <BuyConfirmSheet
+        open={buySheetOpen}
+        onClose={() => setBuySheetOpen(false)}
+        onConfirm={() => setCheckoutOpen(true)}
+      />
       <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </div>
   );
