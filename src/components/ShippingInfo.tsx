@@ -5,14 +5,20 @@ const ShippingInfo = () => {
     <div className="space-y-0">
       {/* Shipping estimate */}
       <div className="px-3 py-3 border-b border-border">
-        <div className="flex items-center gap-3">
-          <Truck className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-          <div>
-            <p className="text-sm font-medium">Receba até 8–13 de abr.</p>
-            <p className="text-xs">
-              Taxa de envio: <span className="text-success font-bold">Grátis</span>
-            </p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Truck className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="bg-success text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
+                  Frete grátis
+                </span>
+                <span className="text-sm text-muted-foreground line-through">R$ 9,60</span>
+              </div>
+              <p className="text-sm text-foreground mt-0.5">Receba até 7–10 de abr</p>
+            </div>
           </div>
+          <ChevronRight className="w-4 h-4 text-muted-foreground" />
         </div>
       </div>
 
@@ -23,7 +29,7 @@ const ShippingInfo = () => {
             <CheckCircle className="w-5 h-5 text-success" />
             <span className="text-success font-bold text-sm">Proteção do cliente</span>
           </div>
-          <ChevronRight className="w-5 h-5 text-muted-foreground" />
+          <ChevronRight className="w-4 h-4 text-muted-foreground" />
         </div>
         <div className="grid grid-cols-2 gap-y-1.5 gap-x-4 pl-7">
           <div className="flex items-center gap-1.5 text-xs text-foreground">
