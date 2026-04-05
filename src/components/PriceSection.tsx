@@ -26,13 +26,6 @@ const PriceSection = () => {
         <p className="text-white/60 text-xs line-through mt-0.5">R$ 589,43</p>
       </div>
 
-      {/* Installments */}
-      <div className="px-3 py-2 border-b border-border flex items-center gap-1">
-        <span className="text-sm">🏷️</span>
-        <span className="text-sm text-foreground">3x R$ 15,97</span>
-        <span className="text-sm text-success font-semibold">sem juros</span>
-        <span className="text-muted-foreground ml-auto">›</span>
-      </div>
 
       {/* Savings badge */}
       <div className="px-3 py-2">
