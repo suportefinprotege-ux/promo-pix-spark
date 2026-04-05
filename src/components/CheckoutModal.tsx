@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { X, Copy, Check, Loader2, Minus, Plus, ChevronDown, ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import tiktokLogo from "@/assets/faixa_2.png";
+import tiktokShopBanner from "@/assets/faixa_1.jpg";
 
 interface CheckoutModalProps {
   open: boolean;
