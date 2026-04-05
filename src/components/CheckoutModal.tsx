@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { X, Copy, Check, Loader2, Minus, Plus, ChevronDown, ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import tiktokLogo from "@/assets/faixa_2.png";
+import tiktokShopBanner from "@/assets/faixa_1.jpg";
 
 interface CheckoutModalProps {
   open: boolean;
@@ -135,7 +137,7 @@ const CheckoutModal = ({ open, onClose }: CheckoutModalProps) => {
         {/* Header - TikTok style */}
         <div className="bg-background px-4 py-3 flex items-center justify-between rounded-t-2xl">
           <div className="flex items-center gap-2">
-            <span className="text-xl font-extrabold text-foreground tracking-tight">TikTok</span>
+            <img src={tiktokLogo} alt="TikTok" className="h-6 object-contain" />
           </div>
           <div className="flex items-center gap-1.5">
             <ShieldCheck className="w-4 h-4 text-success" />
@@ -150,8 +152,8 @@ const CheckoutModal = ({ open, onClose }: CheckoutModalProps) => {
         </div>
 
         {/* TikTok Shop banner */}
-        <div className="bg-foreground py-2 px-4 flex items-center justify-center gap-2">
-          <span className="text-background font-bold text-sm tracking-wide">♪ TikTok Shop</span>
+        <div className="w-full">
+          <img src={tiktokShopBanner} alt="TikTok Shop" className="w-full h-auto object-cover" />
         </div>
 
         {/* Cart section */}
