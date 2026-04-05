@@ -1,4 +1,4 @@
-import { ArrowLeft, Search, Forward, ShoppingCart, MoreHorizontal } from "lucide-react";
+import { ArrowLeft, Search, Share, ShoppingCart, MoreHorizontal } from "lucide-react";
 
 const TopHeader = () => {
   return (
@@ -11,7 +11,7 @@ const TopHeader = () => {
         <span className="text-sm text-muted-foreground">Kit Pratos Oxford</span>
       </div>
       <button className="p-1 text-foreground flex-shrink-0">
-        <Forward className="w-5 h-5" />
+        <Share className="w-5 h-5" />
       </button>
       <button className="p-1 text-foreground flex-shrink-0 relative">
         <ShoppingCart className="w-5 h-5" />
