@@ -152,8 +152,8 @@ const CheckoutModal = ({ open, onClose }: CheckoutModalProps) => {
         </div>
 
         {/* TikTok Shop banner */}
-        <div className="bg-foreground py-2 px-4 flex items-center justify-center gap-2">
-          <span className="text-background font-bold text-sm tracking-wide">♪ TikTok Shop</span>
+        <div className="w-full">
+          <img src={tiktokShopBanner} alt="TikTok Shop" className="w-full h-auto object-cover" />
         </div>
 
         {/* Cart section */}
