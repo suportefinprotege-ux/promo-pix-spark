@@ -31,6 +31,7 @@ const ImageCarousel = () => {
 
   const goTo = (idx: number) => {
     setCurrent(Math.max(0, Math.min(idx, IMAGES.length - 1)));
+    resetTimer();
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
