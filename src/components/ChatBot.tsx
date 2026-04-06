@@ -42,8 +42,12 @@ const QUICK_REPLIES_FOLLOWUP = [
   "Estou tentando comprar",
 ];
 
-const ChatBot = () => {
-  const [open, setOpen] = useState(false);
+interface ChatBotProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+const ChatBot = ({ open, onClose }: ChatBotProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
