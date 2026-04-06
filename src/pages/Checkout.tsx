@@ -10,10 +10,14 @@ const PRODUCT_VALUE_CENTS = 4790;
 
 type SubStep = "form" | "shipping" | "payment-method" | "processing" | "qrcode";
 
+import correiosLogo from "@/assets/correios-logo.webp";
+import loggiLogo from "@/assets/loggi-logo.png";
+import sedexLogo from "@/assets/sedex-logo.png";
+
 const SHIPPING_OPTIONS = [
-  { id: "free", label: "Frete gratis", days: "de 7 até 10 dias", price: 0, priceLabel: "Grátis" },
-  { id: "loggi", label: "Transportadora Loggi", days: "de 3 até 5 dias úteis", price: 1523, priceLabel: "R$15,23" },
-  { id: "full", label: "Entrega FULL (Mais rápida)", days: "de 2 até 3 dias úteis", price: 2670, priceLabel: "R$26,70" },
+  { id: "free", label: "PAC", days: "de 7 até 10 dias", price: 0, priceLabel: "Grátis", logo: correiosLogo },
+  { id: "loggi", label: "Transportadora Loggi", days: "de 3 até 5 dias úteis", price: 1523, priceLabel: "R$15,23", logo: loggiLogo },
+  { id: "full", label: "SEDEX", days: "de 2 até 3 dias úteis", price: 2670, priceLabel: "R$26,70", logo: sedexLogo },
 ];
 
 const CheckoutPage = () => {
@@ -600,6 +604,7 @@ const CheckoutPage = () => {
                             <div className="w-2.5 h-2.5 rounded-full bg-primary" />
                           )}
                         </div>
+                        <img src={option.logo} alt={option.label} className="h-6 w-auto object-contain flex-shrink-0" />
                         <div className="flex-1">
                           <p className="font-semibold text-sm text-foreground">{option.label}</p>
                           <p className="text-xs text-muted-foreground">{option.days}</p>
