@@ -92,9 +92,9 @@ const ProductPageReviews = () => {
             )}
             <div className="flex items-center justify-between">
               <span className="text-xs text-muted-foreground">{review.date}</span>
-              <div className="flex items-center gap-3">
-                <span className="text-muted-foreground text-lg">···</span>
-                <span className="text-muted-foreground text-sm">👍</span>
+              <div className="flex items-center gap-4">
+                <MoreHorizontal className="w-5 h-5 text-muted-foreground" />
+                <ThumbsUp className="w-5 h-5 text-muted-foreground" />
               </div>
             </div>
           </div>
