@@ -9,9 +9,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
-  LogOut, RefreshCw, Search, Package, DollarSign, Clock, CheckCircle2,
+  LogOut, RefreshCw, Search, Package, DollarSign, Clock, CheckCircle2, MessageCircle,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import AdminChat from "@/components/AdminChat";
 
 interface Order {
   id: string;
