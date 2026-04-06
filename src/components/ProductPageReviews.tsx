@@ -103,7 +103,10 @@ const ProductPageReviews = () => {
               <span className="text-xs text-muted-foreground">{review.date}</span>
               <div className="flex items-center gap-4">
                 <MoreHorizontal className="w-5 h-5 text-muted-foreground" />
-                <ThumbsUp className="w-5 h-5 text-muted-foreground" />
+                <div className="flex items-center gap-1 text-muted-foreground">
+                  <ThumbsUp className="w-5 h-5" />
+                  <span className="text-xs">Curtir</span>
+                </div>
               </div>
             </div>
           </div>
