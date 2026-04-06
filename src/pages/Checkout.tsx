@@ -583,7 +583,11 @@ const CheckoutPage = () => {
 
                 <button
                   onClick={() => {
-                    if (name && cpf && phone) setSubStep("shipping");
+                    if (name && cpf && phone) {
+                      ttqIdentify({ email: email || undefined, phone_number: phone });
+                      ttqTrack("ClickButton", { content_name: "ir_para_entrega" });
+                      setSubStep("shipping");
+                    }
                   }}
                   className="w-full bg-foreground text-background font-bold py-4 rounded-xl text-base uppercase tracking-wide"
                 >
