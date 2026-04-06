@@ -81,8 +81,8 @@ const CheckoutPage = () => {
     setSubStep("processing");
     try {
       const selectedOption = SHIPPING_OPTIONS.find((o) => o.id === selectedShipping);
-      const shippingTotal = selectedOption?.price || 0;
-      const totalCents = PRODUCT_VALUE_CENTS * quantity + shippingTotal;
+      const shippingTotal = freeShipping ? 0 : (selectedOption?.price || 0);
+      const totalCentsValue = cartTotalCents + shippingTotal;
 
       const { data, error } = await supabase.functions.invoke("create-pix", {
         body: { value: totalCents },
