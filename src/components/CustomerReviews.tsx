@@ -2,7 +2,7 @@ import { ThumbsUp, MoreHorizontal } from "lucide-react";
 
 const REVIEWS = [
   {
-    name: "Luh Moraes",
+    name: "L**h M**s",
     avatar: "/images/avatar-main-1.png",
     stars: 5,
     item: "Padrão",
@@ -14,7 +14,7 @@ const REVIEWS = [
     ],
   },
   {
-    name: "Carlos Albuquerque",
+    name: "C**s A**e",
     avatar: "/images/avatar-main-2.png",
     stars: 5,
     item: "Padrão",
@@ -26,7 +26,7 @@ const REVIEWS = [
     ],
   },
   {
-    name: "Elane Costa",
+    name: "E**e C**a",
     avatar: "/images/avatar-main-3.png",
     stars: 5,
     item: "Padrão",
@@ -38,7 +38,7 @@ const REVIEWS = [
     ],
   },
   {
-    name: "Sofia Dias",
+    name: "S**a D**s",
     avatar: "/images/avatar-main-4.png",
     stars: 4,
     item: "Padrão",
@@ -50,7 +50,7 @@ const REVIEWS = [
     ],
   },
   {
-    name: "Bela Prado",
+    name: "B**a P**o",
     avatar: "/images/avatar-main-5.png",
     stars: 5,
     item: "Padrão",
