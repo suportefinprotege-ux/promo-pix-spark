@@ -360,8 +360,9 @@ const CheckoutPage = () => {
           </div>
           <h3 className="text-xl font-bold text-success">Pagamento Confirmado!</h3>
           <p className="text-sm text-muted-foreground">
-            Seu pagamento foi recebido com sucesso. Você receberá os detalhes do pedido em breve.
+            Redirecionando para o acompanhamento do seu pedido...
           </p>
+          <Loader2 className="w-5 h-5 animate-spin text-success mx-auto" />
         </div>
       ) : (
         <>
