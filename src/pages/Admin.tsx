@@ -9,10 +9,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
-  LogOut, RefreshCw, Search, Package, DollarSign, Clock, CheckCircle2, MessageCircle,
+  LogOut, RefreshCw, Search, Package, DollarSign, Clock, CheckCircle2, MessageCircle, Headset,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import AdminChat from "@/components/AdminChat";
+import AdminAtendimentos from "@/components/AdminAtendimentos";
 
 interface Order {
   id: string;
@@ -54,7 +55,7 @@ const Admin = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState<"orders" | "chat">("orders");
+  const [activeTab, setActiveTab] = useState<"orders" | "chat" | "atendimentos">("orders");
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -159,12 +160,25 @@ const Admin = () => {
           <MessageCircle className="w-4 h-4" />
           Chat
         </button>
+        <button
+          onClick={() => setActiveTab("atendimentos")}
+          className={`flex-1 py-3 text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+            activeTab === "atendimentos"
+              ? "text-primary border-b-2 border-primary"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Headset className="w-4 h-4" />
+          Atendimentos
+        </button>
       </div>
 
       {activeTab === "chat" ? (
         <div className="h-[calc(100vh-106px)]">
           <AdminChat />
         </div>
+      ) : activeTab === "atendimentos" ? (
+        <AdminAtendimentos onOpenChat={() => setActiveTab("chat")} />
       ) : (
         <div className="p-4 max-w-7xl mx-auto space-y-4">
           {/* Stats */}
