@@ -36,6 +36,7 @@ const Index = () => {
         open={buySheetOpen}
         onClose={() => setBuySheetOpen(false)}
       />
+      <ChatBot />
     </div>
   );
 };
