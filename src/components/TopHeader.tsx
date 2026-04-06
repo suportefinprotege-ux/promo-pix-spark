@@ -1,6 +1,13 @@
 import { ArrowLeft, Search, Share, ShoppingCart, MoreHorizontal } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
 
-const TopHeader = () => {
+interface TopHeaderProps {
+  onCartOpen?: () => void;
+}
+
+const TopHeader = ({ onCartOpen }: TopHeaderProps) => {
+  const { totalItems } = useCart();
+
   return (
     <div className="sticky top-0 z-30 bg-background flex items-center gap-2 px-3 py-2 border-b border-border">
       <button className="p-1 text-foreground flex-shrink-0">
@@ -13,8 +20,13 @@ const TopHeader = () => {
       <button className="p-1 text-foreground flex-shrink-0">
         <Share className="w-5 h-5" />
       </button>
-      <button className="p-1 text-foreground flex-shrink-0 relative">
+      <button onClick={onCartOpen} className="p-1 text-foreground flex-shrink-0 relative">
         <ShoppingCart className="w-5 h-5" />
+        {totalItems > 0 && (
+          <span className="absolute -top-1 -right-1 bg-sale text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+            {totalItems}
+          </span>
+        )}
       </button>
       <button className="p-1 text-foreground flex-shrink-0">
         <MoreHorizontal className="w-5 h-5" />
