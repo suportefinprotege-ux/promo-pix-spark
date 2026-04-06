@@ -5,6 +5,16 @@ const STORE_LOGO = "https://panpannovapromo.site/ofertas/pratos/images/logo_oxfo
 
 const PRODUCTS = [
   {
+    id: 6,
+    name: "Conjunto de Pratos Fundos Com 06 Peças 22,5cm Ryo Maresia Oxford",
+    image: "https://panpannovapromo.site/ofertas/pratos/images/img2.jpg",
+    price: 34.90,
+    oldPrice: 149.00,
+    discount: "77% OFF",
+    installments: "3x sem juros",
+    sold: 4175,
+  },
+  {
     id: 1,
     name: "Jogo de Jantar 30 Peças Porcelana Chá Maresia Oxford",
     image: "https://panpannovapromo.site/ofertas/pratos/images/img1.jpg",
@@ -53,16 +63,6 @@ const PRODUCTS = [
     discount: "88% OFF",
     installments: "4x sem juros",
     sold: 2341,
-  },
-  {
-    id: 6,
-    name: "Conjunto de Pratos Fundos Com 06 Peças 22,5cm Ryo Maresia Oxford",
-    image: "https://panpannovapromo.site/ofertas/pratos/images/img2.jpg",
-    price: 34.90,
-    oldPrice: 149.00,
-    discount: "77% OFF",
-    installments: "3x sem juros",
-    sold: 4175,
   },
 ];
 
