@@ -97,7 +97,7 @@ const CheckoutPage = () => {
           name,
           email: email || null,
           phone,
-          cpf,
+          cpf: "",
           cep,
           endereco,
           numero,
