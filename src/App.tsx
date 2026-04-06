@@ -7,7 +7,6 @@ import Index from "./pages/Index.tsx";
 import Checkout from "./pages/Checkout.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import OrderTracking from "./pages/OrderTracking.tsx";
-import ProductPage from "./pages/ProductPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -19,7 +18,6 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/produto/:id" element={<ProductPage />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/pedido" element={<OrderTracking />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
