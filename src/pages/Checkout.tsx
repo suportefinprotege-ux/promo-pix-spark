@@ -604,8 +604,8 @@ const CheckoutPage = () => {
                             <div className="w-2.5 h-2.5 rounded-full bg-primary" />
                           )}
                         </div>
-                        <div className="w-16 h-8 flex items-center justify-center flex-shrink-0">
-                          <img src={option.logo} alt={option.label} className="max-h-8 max-w-16 object-contain" />
+                        <div className="w-20 h-10 flex items-center justify-center flex-shrink-0">
+                          <img src={option.logo} alt={option.label} className="max-h-10 max-w-20 object-contain" />
                         </div>
                         <div className="flex-1">
                           <p className="font-semibold text-sm text-foreground">{option.label}</p>
