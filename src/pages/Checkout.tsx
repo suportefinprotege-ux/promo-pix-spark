@@ -365,7 +365,7 @@ const CheckoutPage = () => {
                 </button>
                 <span className="text-sm font-medium w-6 text-center text-foreground">{quantity}</span>
                 <button
-                  onClick={() => setQuantity(Math.min(3, quantity + 1))}
+                  onClick={() => setQuantity(Math.min(2, quantity + 1))}
                   className="w-8 h-8 flex items-center justify-center text-primary"
                 >
                   <Plus className="w-3.5 h-3.5" />
