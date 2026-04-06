@@ -2,11 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Copy, Check, Loader2, Minus, Plus, ChevronDown, ShieldCheck, ArrowLeft, Smartphone, QrCode, CheckCircle2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useCart } from "@/contexts/CartContext";
 import tiktokLogo from "@/assets/faixa_2.png";
 import tiktokShopBanner from "@/assets/faixa_1.jpg";
 import pixLogo from "@/assets/pix-logo.png";
-
-const PRODUCT_VALUE_CENTS = 4790;
 
 type SubStep = "form" | "shipping" | "payment-method" | "processing" | "qrcode";
 
@@ -18,13 +17,13 @@ const SHIPPING_OPTIONS = [
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
+  const { items, updateQuantity, totalCents: cartTotalCents, totalItems, freeShipping, clearCart } = useCart();
   const [copied, setCopied] = useState(false);
   const [email, setEmail] = useState("");
   const [noEmail, setNoEmail] = useState(false);
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
   const [cpf, setCpf] = useState("");
-  const [quantity, setQuantity] = useState(1);
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [subStep, setSubStep] = useState<SubStep>("form");
   const [loading, setLoading] = useState(false);
@@ -82,11 +81,11 @@ const CheckoutPage = () => {
     setSubStep("processing");
     try {
       const selectedOption = SHIPPING_OPTIONS.find((o) => o.id === selectedShipping);
-      const shippingTotal = selectedOption?.price || 0;
-      const totalCents = PRODUCT_VALUE_CENTS * quantity + shippingTotal;
+      const shippingTotal = freeShipping ? 0 : (selectedOption?.price || 0);
+      const totalCentsValue = cartTotalCents + shippingTotal;
 
       const { data, error } = await supabase.functions.invoke("create-pix", {
-        body: { value: totalCents },
+        body: { value: totalCentsValue },
       });
       if (error) throw error;
 
@@ -103,7 +102,7 @@ const CheckoutPage = () => {
           bairro,
           cidade,
           estado,
-          quantity,
+          quantity: totalItems,
           shipping_method: selectedShipping,
           pix_transaction_id: data.id,
         },
@@ -214,10 +213,11 @@ const CheckoutPage = () => {
   useEffect(() => {
     if (paymentStatus === "paid") {
       const selectedOption = SHIPPING_OPTIONS.find((o) => o.id === selectedShipping);
-      const shippingTotal = selectedOption?.price || 0;
-      const totalValue = ((PRODUCT_VALUE_CENTS * quantity + shippingTotal) / 100).toFixed(2).replace(".", ",");
+      const shippingTotal = freeShipping ? 0 : (selectedOption?.price || 0);
+      const totalValue = ((cartTotalCents + shippingTotal) / 100).toFixed(2).replace(".", ",");
       
       const timer = setTimeout(() => {
+        clearCart();
         navigate("/pedido", {
           state: {
             name,
@@ -227,7 +227,7 @@ const CheckoutPage = () => {
             endereco,
             numero,
             cep,
-            quantity,
+            quantity: totalItems,
             total: totalValue,
             shippingLabel: selectedOption?.label || "PAC",
             shippingDays: selectedOption?.days || "",
@@ -240,8 +240,8 @@ const CheckoutPage = () => {
     }
   }, [paymentStatus]);
 
-  const shippingCost = SHIPPING_OPTIONS.find((o) => o.id === selectedShipping)?.price || 0;
-  const productTotal = PRODUCT_VALUE_CENTS * quantity;
+  const shippingCost = freeShipping ? 0 : (SHIPPING_OPTIONS.find((o) => o.id === selectedShipping)?.price || 0);
+  const productTotal = cartTotalCents;
   const grandTotal = productTotal + shippingCost;
   const total = (grandTotal / 100).toFixed(2).replace(".", ",");
   const subtotal = (productTotal / 100).toFixed(2).replace(".", ",");
@@ -405,37 +405,43 @@ const CheckoutPage = () => {
               <h3 className="font-bold text-foreground">Seu carrinho</h3>
               <div className="flex items-center gap-2">
                 <span className="bg-primary text-primary-foreground text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                  {quantity}
+                  {totalItems}
                 </span>
                 <ChevronDown className="w-4 h-4 text-muted-foreground" />
               </div>
             </div>
-            <div className="flex items-center gap-3 pb-3">
-              <img
-                src="https://panpannovapromo.site/ofertas/pratos/images/img1.jpg"
-                alt="Produto"
-                className="w-14 h-14 rounded-lg object-cover"
-              />
-              <div className="flex-1">
-                <p className="font-semibold text-sm text-foreground">Conjunto 30 Peças Perfeitas</p>
-                <p className="text-xs text-sale font-medium">Últimos unidades</p>
+            {items.map((item) => (
+              <div key={item.product.id} className="flex items-center gap-3 pb-3">
+                <img
+                  src={item.product.thumbnailImage}
+                  alt={item.product.name}
+                  className="w-14 h-14 rounded-lg object-cover"
+                />
+                <div className="flex-1">
+                  <p className="font-semibold text-sm text-foreground line-clamp-1">{item.product.name}</p>
+                  <p className="text-xs text-sale font-medium">R$ {item.product.price.toFixed(2).replace(".", ",")}</p>
+                </div>
+                <div className="flex items-center gap-0 border border-border rounded-full">
+                  <button
+                    onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                    className="w-8 h-8 flex items-center justify-center text-sale"
+                  >
+                    <Minus className="w-3.5 h-3.5" />
+                  </button>
+                  <span className="text-sm font-medium w-6 text-center text-foreground">{item.quantity}</span>
+                  <button
+                    onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                    disabled={item.quantity >= 2}
+                    className="w-8 h-8 flex items-center justify-center text-primary disabled:opacity-30"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
-              <div className="flex items-center gap-0 border border-border rounded-full">
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-8 h-8 flex items-center justify-center text-sale"
-                >
-                  <Minus className="w-3.5 h-3.5" />
-                </button>
-                <span className="text-sm font-medium w-6 text-center text-foreground">{quantity}</span>
-                <button
-                  onClick={() => setQuantity(Math.min(2, quantity + 1))}
-                  className="w-8 h-8 flex items-center justify-center text-primary"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
+            ))}
+            {items.length === 0 && (
+              <p className="text-sm text-muted-foreground text-center py-4">Carrinho vazio</p>
+            )}
             <div className="border-t border-border pt-3 space-y-1.5">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Subtotal</span>
@@ -445,6 +451,9 @@ const CheckoutPage = () => {
                 <span className="text-muted-foreground">Frete</span>
                 <span className={`${shippingCost === 0 ? "text-success font-medium" : "text-foreground"}`}>{freteLabel}</span>
               </div>
+              {freeShipping && (
+                <p className="text-xs text-success font-medium">🎉 Frete grátis aplicado!</p>
+              )}
               <div className="flex justify-between text-sm font-bold pt-1.5 border-t border-border">
                 <span className="text-foreground">Total</span>
                 <span className="text-sale">R$ {total}</span>
