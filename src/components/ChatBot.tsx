@@ -101,86 +101,85 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
       {/* Header */}
       <div className="bg-background border-b border-border px-4 py-3 flex items-center gap-3">
         <button onClick={onClose} className="text-muted-foreground">
-              <X className="w-5 h-5" />
-            </button>
-            <img
-              src={STORE_LOGO}
-              alt={STORE_NAME}
-              className="w-10 h-10 rounded-full object-contain bg-secondary p-0.5"
-            />
-            <div className="flex-1">
-              <p className="font-bold text-sm text-foreground">{STORE_NAME}</p>
-              <p className="text-xs text-muted-foreground">Normalmente responde em até 24 horas</p>
-            </div>
-          </div>
-
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 bg-secondary/30">
-            {messages.map((msg) => (
-              <div key={msg.id}>
-                {msg.from === "bot" ? (
-                  <div className="flex items-start gap-2">
-                    <img
-                      src={STORE_LOGO}
-                      alt=""
-                      className="w-7 h-7 rounded-full object-contain bg-secondary p-0.5 mt-0.5 flex-shrink-0"
-                    />
-                    <div className="space-y-2 max-w-[85%]">
-                      <div className="bg-background rounded-2xl rounded-tl-sm px-4 py-3 text-sm text-foreground shadow-sm whitespace-pre-line">
-                        {msg.text}
-                      </div>
-                      {msg.quickReplies && (
-                        <div className="bg-background rounded-2xl px-4 py-3 shadow-sm space-y-0">
-                          <p className="font-bold text-sm text-foreground mb-2">
-                            Como posso ajudar você hoje?
-                          </p>
-                          {msg.quickReplies.map((qr) => (
-                            <button
-                              key={qr}
-                              onClick={() => handleQuickReply(qr)}
-                              className="w-full flex items-center justify-between py-3 border-t border-border text-sm text-foreground hover:bg-secondary/50 transition-colors"
-                            >
-                              <span>{qr}</span>
-                              <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                            </button>
-                          ))}
-                          <p className="text-[11px] text-muted-foreground mt-2 pt-1">
-                            Enviado por chatbot
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex justify-end">
-                    <div className="bg-primary text-primary-foreground rounded-2xl rounded-tr-sm px-4 py-3 text-sm max-w-[80%]">
-                      {msg.text}
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-            <div ref={bottomRef} />
-          </div>
-
-          {/* Input */}
-          <div className="bg-background border-t border-border px-4 py-3 flex items-center gap-3">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              placeholder="Enviar mensagem..."
-              className="flex-1 bg-secondary rounded-full px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-            />
-            <button
-              onClick={handleSend}
-              className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center flex-shrink-0"
-            >
-              <Send className="w-4 h-4" />
-            </button>
-          </div>
+          <X className="w-5 h-5" />
+        </button>
+        <img
+          src={STORE_LOGO}
+          alt={STORE_NAME}
+          className="w-10 h-10 rounded-full object-contain bg-secondary p-0.5"
+        />
+        <div className="flex-1">
+          <p className="font-bold text-sm text-foreground">{STORE_NAME}</p>
+          <p className="text-xs text-muted-foreground">Normalmente responde em até 24 horas</p>
         </div>
+      </div>
+
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 bg-secondary/30">
+        {messages.map((msg) => (
+          <div key={msg.id}>
+            {msg.from === "bot" ? (
+              <div className="flex items-start gap-2">
+                <img
+                  src={STORE_LOGO}
+                  alt=""
+                  className="w-7 h-7 rounded-full object-contain bg-secondary p-0.5 mt-0.5 flex-shrink-0"
+                />
+                <div className="space-y-2 max-w-[85%]">
+                  <div className="bg-background rounded-2xl rounded-tl-sm px-4 py-3 text-sm text-foreground shadow-sm whitespace-pre-line">
+                    {msg.text}
+                  </div>
+                  {msg.quickReplies && (
+                    <div className="bg-background rounded-2xl px-4 py-3 shadow-sm space-y-0">
+                      <p className="font-bold text-sm text-foreground mb-2">
+                        Como posso ajudar você hoje?
+                      </p>
+                      {msg.quickReplies.map((qr) => (
+                        <button
+                          key={qr}
+                          onClick={() => handleQuickReply(qr)}
+                          className="w-full flex items-center justify-between py-3 border-t border-border text-sm text-foreground hover:bg-secondary/50 transition-colors"
+                        >
+                          <span>{qr}</span>
+                          <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                        </button>
+                      ))}
+                      <p className="text-[11px] text-muted-foreground mt-2 pt-1">
+                        Enviado por chatbot
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="flex justify-end">
+                <div className="bg-primary text-primary-foreground rounded-2xl rounded-tr-sm px-4 py-3 text-sm max-w-[80%]">
+                  {msg.text}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+        <div ref={bottomRef} />
+      </div>
+
+      {/* Input */}
+      <div className="bg-background border-t border-border px-4 py-3 flex items-center gap-3">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSend()}
+          placeholder="Enviar mensagem..."
+          className="flex-1 bg-secondary rounded-full px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+        />
+        <button
+          onClick={handleSend}
+          className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center flex-shrink-0"
+        >
+          <Send className="w-4 h-4" />
+        </button>
+      </div>
     </div>
   );
 };
