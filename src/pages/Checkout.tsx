@@ -177,6 +177,36 @@ const CheckoutPage = () => {
     };
   }, []);
 
+  // Redirect to tracking page when payment is confirmed
+  useEffect(() => {
+    if (paymentStatus === "paid") {
+      const selectedOption = SHIPPING_OPTIONS.find((o) => o.id === selectedShipping);
+      const shippingTotal = selectedOption?.price || 0;
+      const totalValue = ((PRODUCT_VALUE_CENTS * quantity + shippingTotal) / 100).toFixed(2).replace(".", ",");
+      
+      const timer = setTimeout(() => {
+        navigate("/pedido", {
+          state: {
+            name,
+            cidade,
+            estado,
+            bairro,
+            endereco,
+            numero,
+            cep,
+            quantity,
+            total: totalValue,
+            shippingLabel: selectedOption?.label || "PAC",
+            shippingDays: selectedOption?.days || "",
+            email,
+            phone,
+          },
+        });
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [paymentStatus]);
+
   const shippingCost = SHIPPING_OPTIONS.find((o) => o.id === selectedShipping)?.price || 0;
   const productTotal = PRODUCT_VALUE_CENTS * quantity;
   const grandTotal = productTotal + shippingCost;
