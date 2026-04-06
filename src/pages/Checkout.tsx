@@ -636,9 +636,7 @@ const CheckoutPage = () => {
 
                 {/* Pix option selected */}
                 <div className="border-2 border-foreground rounded-xl p-4 flex items-center gap-3">
-                  <svg width="40" height="16" viewBox="0 0 40 16" className="flex-shrink-0">
-                    <text x="0" y="13" fontSize="11" fontWeight="bold" fill="#32BCAD" fontFamily="sans-serif">✦ pix</text>
-                  </svg>
+                  <img src={pixLogo} alt="Pix" className="h-6" />
                 </div>
 
                 <div className="border border-border rounded-xl p-4">
