@@ -85,7 +85,7 @@ const ProductPageReviews = () => {
                 </div>
               </div>
             </div>
-            <p className="text-sm font-semibold text-foreground mb-1.5">{review.text}</p>
+            <p className="text-sm text-foreground/80 mb-2">{review.text}</p>
             {review.photos.length > 0 && (
               <div className="flex gap-2 mb-1.5">
                 {review.photos.map((photo, j) => (
