@@ -55,7 +55,7 @@ const Admin = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState<"orders" | "chat">("orders");
+  const [activeTab, setActiveTab] = useState<"orders" | "chat" | "atendimentos">("orders");
   const navigate = useNavigate();
   const { toast } = useToast();
 
