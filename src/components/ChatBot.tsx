@@ -1,15 +1,24 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Send, ChevronRight } from "lucide-react";
-import VendorChat from "./VendorChat";
+import { X, Send, ChevronRight, Smile, Plus } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { PRODUCTS } from "@/data/products";
 
 const STORE_LOGO = "https://panpannovapromo.site/ofertas/pratos/images/logo_oxford.png";
 const STORE_NAME = "Oxford";
+const product = PRODUCTS[0];
 
-type Message = {
+type BotMessage = {
   id: number;
   from: "bot" | "user" | "typing";
   text: string;
   quickReplies?: string[];
+};
+
+type ChatMessage = {
+  id: string;
+  sender_type: string;
+  message: string;
+  created_at: string;
 };
 
 const ALL_QUESTIONS: { question: string; answer: string }[] = [
@@ -45,7 +54,20 @@ const ALL_QUESTIONS: { question: string; answer: string }[] = [
     question: "O produto é original?",
     answer: "Sim! Trabalhamos apenas com produtos originais Oxford com nota fiscal e garantia do fabricante.",
   },
+  {
+    question: "Falar com atendente",
+    answer: "Certo! A partir de agora suas mensagens serão enviadas diretamente para nosso atendente. Aguarde a resposta! 😊",
+  },
 ];
+
+function getVisitorId() {
+  let id = localStorage.getItem("chat_visitor_id");
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem("chat_visitor_id", id);
+  }
+  return id;
+}
 
 interface ChatBotProps {
   open: boolean;
@@ -53,14 +75,78 @@ interface ChatBotProps {
 }
 
 const ChatBot = ({ open, onClose }: ChatBotProps) => {
-  const [tab, setTab] = useState<"bot" | "vendedor">("bot");
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<BotMessage[]>([]);
+  const [vendorMessages, setVendorMessages] = useState<ChatMessage[]>([]);
   const [askedQuestions, setAskedQuestions] = useState<Set<string>>(new Set());
   const [isTyping, setIsTyping] = useState(false);
   const [input, setInput] = useState("");
+  const [liveMode, setLiveMode] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [sending, setSending] = useState(false);
+  const [showProduct, setShowProduct] = useState(true);
   const bottomRef = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
+  const visitorId = useRef(getVisitorId());
 
+  // Init session for vendor messages
+  useEffect(() => {
+    const initSession = async () => {
+      const { data: existing } = await supabase
+        .from("chat_sessions")
+        .select("id")
+        .eq("visitor_id", visitorId.current)
+        .eq("status", "active")
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (existing) {
+        setSessionId(existing.id);
+      } else {
+        const { data: created } = await supabase
+          .from("chat_sessions")
+          .insert({ visitor_id: visitorId.current })
+          .select("id")
+          .single();
+        if (created) setSessionId(created.id);
+      }
+    };
+    initSession();
+  }, []);
+
+  // Realtime vendor messages
+  useEffect(() => {
+    if (!sessionId) return;
+
+    const fetchMessages = async () => {
+      const { data } = await supabase
+        .from("chat_messages")
+        .select("*")
+        .eq("session_id", sessionId)
+        .order("created_at", { ascending: true });
+      if (data) setVendorMessages(data);
+    };
+    fetchMessages();
+
+    const channel = supabase
+      .channel(`chat-${sessionId}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "chat_messages", filter: `session_id=eq.${sessionId}` },
+        (payload) => {
+          setVendorMessages((prev) => {
+            const exists = prev.some((m) => m.id === (payload.new as ChatMessage).id);
+            if (exists) return prev;
+            return [...prev, payload.new as ChatMessage];
+          });
+        }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [sessionId]);
+
+  // Init bot welcome
   useEffect(() => {
     if (open && !initialized.current) {
       initialized.current = true;
@@ -78,14 +164,18 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isTyping]);
+  }, [messages, vendorMessages, isTyping]);
 
   const getRemainingQuestions = (asked: Set<string>) => {
     return ALL_QUESTIONS.filter((q) => !asked.has(q.question)).map((q) => q.question);
   };
 
   const handleQuickReply = (text: string) => {
-    const userMsg: Message = { id: Date.now(), from: "user", text };
+    if (text === "Falar com atendente") {
+      setLiveMode(true);
+    }
+
+    const userMsg: BotMessage = { id: Date.now(), from: "user", text };
     const newAsked = new Set(askedQuestions);
     newAsked.add(text);
     setAskedQuestions(newAsked);
@@ -97,7 +187,7 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
       const faq = ALL_QUESTIONS.find((q) => q.question === text);
       const answer = faq?.answer || "Obrigado pela sua mensagem!";
       const remaining = getRemainingQuestions(newAsked);
-      const botMsg: Message = {
+      const botMsg: BotMessage = {
         id: Date.now() + 1,
         from: "bot",
         text: answer,
@@ -107,30 +197,51 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
     }, 1500);
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return;
-    const userMsg: Message = { id: Date.now(), from: "user", text: input.trim() };
-    setMessages((prev) => [...prev, userMsg]);
+    const text = input.trim();
     setInput("");
-    setIsTyping(true);
 
-    setTimeout(() => {
-      setIsTyping(false);
-      const remaining = getRemainingQuestions(askedQuestions);
-      const botMsg: Message = {
-        id: Date.now() + 1,
-        from: "bot",
-        text: "Obrigado pela sua mensagem! Nossa equipe irá responder em breve.",
-        quickReplies: remaining.length > 0 ? remaining : undefined,
-      };
-      setMessages((prev) => [...prev, botMsg]);
-    }, 1500);
+    if (liveMode && sessionId) {
+      // Send to vendor via supabase
+      setSending(true);
+      await supabase.from("chat_messages").insert({
+        session_id: sessionId,
+        sender_type: "customer",
+        message: text,
+      });
+      await supabase
+        .from("chat_sessions")
+        .update({ last_message_at: new Date().toISOString() })
+        .eq("id", sessionId);
+      setSending(false);
+    } else {
+      // Bot fallback
+      const userMsg: BotMessage = { id: Date.now(), from: "user", text };
+      setMessages((prev) => [...prev, userMsg]);
+      setIsTyping(true);
+
+      setTimeout(() => {
+        setIsTyping(false);
+        const remaining = getRemainingQuestions(askedQuestions);
+        const botMsg: BotMessage = {
+          id: Date.now() + 1,
+          from: "bot",
+          text: "Obrigado pela sua mensagem! Nossa equipe irá responder em breve.",
+          quickReplies: remaining.length > 0 ? remaining : undefined,
+        };
+        setMessages((prev) => [...prev, botMsg]);
+      }, 1500);
+    }
   };
+
+  const now = new Date();
+  const timeStr = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
 
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-background max-w-lg mx-auto">
+    <div className="fixed inset-0 z-50 flex flex-col bg-[#f5f5f5] max-w-lg mx-auto">
       {/* Header */}
       <div className="bg-background border-b border-border px-4 py-3 flex items-center gap-3">
         <button onClick={onClose} className="text-muted-foreground">
@@ -143,128 +254,158 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
         />
         <div className="flex-1">
           <p className="font-bold text-sm text-foreground">{STORE_NAME}</p>
-          <p className="text-xs text-muted-foreground">
-            {tab === "bot" ? "Respostas automáticas" : "Fale com o vendedor"}
-          </p>
+          <p className="text-xs text-muted-foreground">Normalmente responde em até 24 horas</p>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex border-b border-border bg-background">
-        <button
-          onClick={() => setTab("bot")}
-          className={`flex-1 py-2.5 text-sm font-medium transition-colors ${
-            tab === "bot"
-              ? "text-primary border-b-2 border-primary"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          Chatbot
-        </button>
-        <button
-          onClick={() => setTab("vendedor")}
-          className={`flex-1 py-2.5 text-sm font-medium transition-colors ${
-            tab === "vendedor"
-              ? "text-primary border-b-2 border-primary"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          Vendedor
-        </button>
-      </div>
+      {/* Messages area */}
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+        {/* Timestamp */}
+        <p className="text-center text-xs text-muted-foreground">{timeStr}</p>
 
-      {/* Content */}
-      {tab === "vendedor" ? (
-        <VendorChat />
-      ) : (
-        <>
-          {/* Bot Messages */}
-          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 bg-secondary/30">
-            {messages.map((msg) => (
-              <div key={msg.id}>
-                {msg.from === "bot" ? (
-                  <div className="flex items-start gap-2">
-                    <img
-                      src={STORE_LOGO}
-                      alt=""
-                      className="w-7 h-7 rounded-full object-contain bg-secondary p-0.5 mt-0.5 flex-shrink-0"
-                    />
-                    <div className="space-y-2 max-w-[85%]">
-                      <div className="bg-background rounded-2xl rounded-tl-sm px-4 py-3 text-sm text-foreground shadow-sm whitespace-pre-line">
-                        {msg.text}
-                      </div>
-                      {msg.quickReplies && msg.quickReplies.length > 0 && (
-                        <div className="bg-background rounded-2xl px-4 py-3 shadow-sm">
-                          <p className="font-bold text-sm text-foreground mb-2">
-                            Como posso ajudar você hoje?
-                          </p>
-                          {msg.quickReplies.map((qr) => (
-                            <button
-                              key={qr}
-                              onClick={() => handleQuickReply(qr)}
-                              className="w-full flex items-center justify-between py-3 border-t border-border text-sm text-foreground hover:bg-secondary/50 transition-colors text-left"
-                            >
-                              <span>{qr}</span>
-                              <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                            </button>
-                          ))}
-                          <p className="text-[11px] text-muted-foreground mt-2 pt-1">
-                            Enviado por chatbot
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex justify-end items-end gap-1.5">
-                    <span className="text-success text-xs">✓</span>
-                    <div className="bg-primary text-primary-foreground rounded-2xl rounded-tr-sm px-4 py-3 text-sm max-w-[80%]">
-                      {msg.text}
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-
-            {isTyping && (
+        {/* Bot messages */}
+        {messages.map((msg) => (
+          <div key={msg.id}>
+            {msg.from === "bot" ? (
               <div className="flex items-start gap-2">
                 <img
                   src={STORE_LOGO}
                   alt=""
                   className="w-7 h-7 rounded-full object-contain bg-secondary p-0.5 mt-0.5 flex-shrink-0"
                 />
-                <div className="bg-background rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
-                  <div className="flex items-center gap-1">
-                    <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                    <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                    <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                <div className="space-y-2 max-w-[85%]">
+                  <div className="bg-background rounded-2xl rounded-tl-sm px-4 py-3 text-sm text-foreground shadow-sm whitespace-pre-line">
+                    {msg.text}
                   </div>
+                  {msg.quickReplies && msg.quickReplies.length > 0 && (
+                    <div className="bg-background rounded-2xl px-4 py-3 shadow-sm">
+                      <p className="font-bold text-sm text-foreground mb-2">
+                        Como posso ajudar você hoje?
+                      </p>
+                      {msg.quickReplies.map((qr) => (
+                        <button
+                          key={qr}
+                          onClick={() => handleQuickReply(qr)}
+                          className="w-full flex items-center justify-between py-3 border-t border-border text-sm text-foreground hover:bg-secondary/50 transition-colors text-left"
+                        >
+                          <span>{qr}</span>
+                          <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                        </button>
+                      ))}
+                      <p className="text-[11px] text-muted-foreground mt-2 pt-1">
+                        Enviado por chatbot
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="flex justify-end items-end gap-1.5">
+                <span className="text-green-500 text-xs">✓</span>
+                <div className="bg-primary text-primary-foreground rounded-2xl rounded-tr-sm px-4 py-3 text-sm max-w-[80%]">
+                  {msg.text}
                 </div>
               </div>
             )}
-
-            <div ref={bottomRef} />
           </div>
+        ))}
 
-          {/* Bot Input */}
-          <div className="bg-background border-t border-border px-4 py-3 flex items-center gap-3">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              placeholder="Enviar mensagem..."
-              className="flex-1 bg-secondary rounded-full px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+        {/* Vendor messages (live mode) */}
+        {liveMode && vendorMessages.map((msg) => (
+          <div key={msg.id}>
+            {msg.sender_type === "admin" ? (
+              <div className="flex items-start gap-2">
+                <img
+                  src={STORE_LOGO}
+                  alt=""
+                  className="w-7 h-7 rounded-full object-contain bg-secondary p-0.5 mt-0.5 flex-shrink-0"
+                />
+                <div className="bg-background rounded-2xl rounded-tl-sm px-4 py-3 text-sm text-foreground shadow-sm max-w-[85%]">
+                  {msg.message}
+                </div>
+              </div>
+            ) : (
+              <div className="flex justify-end items-end gap-1.5">
+                <span className="text-green-500 text-xs">✓</span>
+                <div className="bg-primary text-primary-foreground rounded-2xl rounded-tr-sm px-4 py-3 text-sm max-w-[80%]">
+                  {msg.message}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+
+        {/* Typing indicator */}
+        {isTyping && (
+          <div className="flex items-start gap-2">
+            <img
+              src={STORE_LOGO}
+              alt=""
+              className="w-7 h-7 rounded-full object-contain bg-secondary p-0.5 mt-0.5 flex-shrink-0"
             />
-            <button
-              onClick={handleSend}
-              className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center flex-shrink-0"
-            >
-              <Send className="w-4 h-4" />
-            </button>
+            <div className="bg-background rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
+              <div className="flex items-center gap-1">
+                <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+              </div>
+            </div>
           </div>
-        </>
+        )}
+
+        <div ref={bottomRef} />
+      </div>
+
+      {/* Product card */}
+      {showProduct && (
+        <div className="mx-3 mb-2 bg-background rounded-xl shadow-sm border border-border flex items-center gap-3 p-3 relative">
+          <button
+            onClick={() => setShowProduct(false)}
+            className="absolute top-2 right-2 text-muted-foreground hover:text-foreground"
+          >
+            <X className="w-4 h-4" />
+          </button>
+          <img
+            src={product.images[0]}
+            alt={product.name}
+            className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
+          />
+          <div className="flex-1 min-w-0 pr-6">
+            <p className="text-sm font-medium text-foreground truncate">{product.name}</p>
+            <p className="text-xs text-muted-foreground">{product.sold.toLocaleString("pt-BR")} vendidos</p>
+          </div>
+          <button className="bg-[#EE4D2D] hover:bg-[#d73a1d] text-white text-sm font-semibold px-4 py-2 rounded-lg flex-shrink-0 transition-colors">
+            Enviar
+          </button>
+        </div>
       )}
+
+      {/* Input */}
+      <div className="bg-background border-t border-border px-4 py-3 flex items-center gap-3">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSend()}
+          placeholder="Enviar mensagem..."
+          className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+          disabled={sending}
+        />
+        <button className="text-muted-foreground">
+          <Smile className="w-5 h-5" />
+        </button>
+        <button
+          onClick={handleSend}
+          disabled={sending}
+          className="text-muted-foreground disabled:opacity-50"
+        >
+          {input.trim() ? (
+            <Send className="w-5 h-5 text-primary" />
+          ) : (
+            <Plus className="w-5 h-5" />
+          )}
+        </button>
+      </div>
     </div>
   );
 };
