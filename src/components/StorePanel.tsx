@@ -101,7 +101,10 @@ const StorePanel = ({ open, onClose }: StorePanelProps) => {
                   <p className="text-xs text-muted-foreground line-through">R$ {product.oldPrice.toFixed(2).replace(".", ",")}</p>
                 </div>
                 <button
-                  onClick={onClose}
+                  onClick={() => {
+                    onClose();
+                    navigate(`/produto/${product.id}`);
+                  }}
                   className="bg-sale text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1.5"
                 >
                   <ShoppingCart className="w-3.5 h-3.5" />
