@@ -16,8 +16,8 @@ import sedexLogo from "@/assets/sedex-logo.png";
 
 const SHIPPING_OPTIONS = [
   { id: "free", label: "PAC", days: "de 7 até 10 dias", price: 0, priceLabel: "Grátis", logo: correiosLogo },
-  { id: "loggi", label: "Transportadora Loggi", days: "de 3 até 5 dias úteis", price: 549, priceLabel: "R$5,49", logo: loggiLogo },
-  { id: "full", label: "SEDEX", days: "de 2 até 3 dias úteis", price: 990, priceLabel: "R$9,90", logo: sedexLogo },
+  { id: "loggi", label: "Transportadora Loggi", days: "de 3 até 5 dias úteis", price: 1523, priceLabel: "R$15,23", logo: loggiLogo },
+  { id: "full", label: "SEDEX", days: "de 2 até 3 dias úteis", price: 2670, priceLabel: "R$26,70", logo: sedexLogo },
 ];
 
 const CheckoutPage = () => {
@@ -365,7 +365,7 @@ const CheckoutPage = () => {
                 </button>
                 <span className="text-sm font-medium w-6 text-center text-foreground">{quantity}</span>
                 <button
-                  onClick={() => setQuantity(Math.min(3, quantity + 1))}
+                  onClick={() => setQuantity(Math.min(2, quantity + 1))}
                   className="w-8 h-8 flex items-center justify-center text-primary"
                 >
                   <Plus className="w-3.5 h-3.5" />
