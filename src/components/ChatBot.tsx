@@ -417,7 +417,7 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
             <p className="text-sm font-medium text-foreground truncate">{product.name}</p>
             <p className="text-xs text-muted-foreground">{product.sold.toLocaleString("pt-BR")} vendidos</p>
           </div>
-          <button className="bg-[#EE4D2D] hover:bg-[#d73a1d] text-white text-sm font-semibold px-4 py-2 rounded-lg flex-shrink-0 transition-colors">
+          <button onClick={handleSendProduct} className="bg-[#EE4D2D] hover:bg-[#d73a1d] text-white text-sm font-semibold px-4 py-2 rounded-lg flex-shrink-0 transition-colors">
             Enviar
           </button>
         </div>
