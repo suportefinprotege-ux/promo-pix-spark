@@ -13,7 +13,7 @@ type SubStep = "form" | "shipping" | "payment-method" | "processing" | "qrcode";
 import loggiLogo from "@/assets/loggi-logo.png";
 
 const SHIPPING_OPTIONS = [
-  { id: "loggi", label: "Transportadora Loggi", days: "até 5 dias úteis", price: 0, priceLabel: "Grátis", logo: loggiLogo },
+  { id: "loggi", label: "Transportadora Loggi", days: "até 5 dias úteis", price: 2687, priceLabel: "R$26,87", logo: loggiLogo },
 ];
 
 const CheckoutPage = () => {
