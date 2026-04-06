@@ -13,25 +13,27 @@ import CustomerReviews from "@/components/CustomerReviews";
 import StoreInfo from "@/components/StoreInfo";
 import ProductDescription from "@/components/ProductDescription";
 import BottomBar from "@/components/BottomBar";
-import BuyConfirmSheet from "@/components/BuyConfirmSheet";
 import CartDrawer from "@/components/CartDrawer";
 
 const Index = () => {
-  const [buySheetOpen, setBuySheetOpen] = useState(false);
+  const product = PRODUCTS[0];
   const [chatOpen, setChatOpen] = useState(false);
   const [storeOpen, setStoreOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
 
   useEffect(() => {
-    const p = PRODUCTS[0];
+    if (!product) return;
+
     trackTikTokEvent("ViewContent", {
-      content_id: String(p.id),
-      content_name: p.name,
+      content_id: String(product.id),
+      content_name: product.name,
       content_type: "product",
-      value: p.price,
+      value: product.price,
       currency: "BRL",
     });
-  }, []);
+  }, [product]);
+
+  if (!product) return null;
 
   return (
     <div className="min-h-screen bg-background max-w-lg mx-auto pb-16">
@@ -50,14 +52,10 @@ const Index = () => {
       <div className="h-2 bg-secondary" />
       <CustomerReviews />
       <BottomBar
-        onBuy={() => setBuySheetOpen(true)}
+        product={product}
         onChat={() => setChatOpen(true)}
         onStore={() => setStoreOpen(true)}
         onCartOpen={() => setCartOpen(true)}
-      />
-      <BuyConfirmSheet
-        open={buySheetOpen}
-        onClose={() => setBuySheetOpen(false)}
       />
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
       <ChatBot open={chatOpen} onClose={() => setChatOpen(false)} />

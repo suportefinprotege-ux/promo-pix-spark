@@ -1,35 +1,56 @@
 import { Store, MessageCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import type { Product } from "@/data/products";
 import { useCart } from "@/contexts/CartContext";
-import { PRODUCTS } from "@/data/products";
 import { trackTikTokEvent } from "@/lib/tiktok-server";
 import { toast } from "sonner";
 
 interface BottomBarProps {
-  onBuy: () => void;
+  product: Product;
   onChat: () => void;
   onStore: () => void;
   onCartOpen: () => void;
 }
 
-const BottomBar = ({ onBuy, onChat, onStore, onCartOpen }: BottomBarProps) => {
-  const { addToCart } = useCart();
+const BottomBar = ({ product, onChat, onStore, onCartOpen }: BottomBarProps) => {
+  const navigate = useNavigate();
+  const { addToCart, items } = useCart();
+
+  const trackAddToCart = () => {
+    trackTikTokEvent("AddToCart", {
+      content_id: String(product.id),
+      content_name: product.name,
+      content_type: "product",
+      value: product.price,
+      currency: "BRL",
+    });
+  };
 
   const handleAddToCart = () => {
-    const product = PRODUCTS[0];
     const added = addToCart(product);
     if (added) {
-      trackTikTokEvent("AddToCart", {
-        content_id: String(product.id),
-        content_name: product.name,
-        content_type: "product",
-        value: product.price,
-        currency: "BRL",
-      });
+      trackAddToCart();
       toast.success("Adicionado ao carrinho!");
       onCartOpen();
-    } else {
-      toast.error("Limite de 2 unidades por produto!");
+      return;
     }
+
+    toast.error("Limite de 2 unidades por produto!");
+  };
+
+  const handleBuyNow = () => {
+    const alreadyInCart = items.some((item) => item.product.id === product.id);
+
+    if (!alreadyInCart) {
+      const added = addToCart(product);
+      if (!added) {
+        toast.error("Limite de 2 unidades por produto!");
+        return;
+      }
+      trackAddToCart();
+    }
+
+    navigate("/checkout");
   };
 
   return (
@@ -50,7 +71,7 @@ const BottomBar = ({ onBuy, onChat, onStore, onCartOpen }: BottomBarProps) => {
           Adicionar ao carrinho
         </button>
         <button
-          onClick={onBuy}
+          onClick={handleBuyNow}
           className="flex-1 py-2.5 text-sm font-bold bg-sale text-white rounded-full flex flex-col items-center leading-tight"
         >
           <span>Comprar agora</span>
