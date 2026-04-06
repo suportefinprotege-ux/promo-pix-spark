@@ -76,6 +76,7 @@ interface ChatBotProps {
 }
 
 const ChatBot = ({ open, onClose }: ChatBotProps) => {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState<BotMessage[]>([]);
   const [vendorMessages, setVendorMessages] = useState<ChatMessage[]>([]);
   const [askedQuestions, setAskedQuestions] = useState<Set<string>>(new Set());
@@ -85,9 +86,26 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
   const [showProduct, setShowProduct] = useState(true);
+  const [productSent, setProductSent] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
   const visitorId = useRef(getVisitorId());
+
+  const handleSendProduct = () => {
+    setProductSent(true);
+    setShowProduct(false);
+    const productMsg: BotMessage = {
+      id: Date.now(),
+      from: "product",
+      text: product.name,
+    };
+    setMessages((prev) => [...prev, productMsg]);
+  };
+
+  const handleBuyFromChat = () => {
+    onClose();
+    navigate("/checkout");
+  };
 
   // Init session for vendor messages
   useEffect(() => {
