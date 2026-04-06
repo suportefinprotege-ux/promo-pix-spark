@@ -41,13 +41,24 @@ const OrderTracking = () => {
   const [trackingCode] = useState(generateTrackingCode);
   const [orderNumber] = useState(generateOrderNumber);
 
-  const order = location.state as OrderState | null;
+  const locationState = location.state as OrderState | null;
 
-  useEffect(() => {
-    if (!order) navigate("/");
-  }, [order, navigate]);
+  const order: OrderState = locationState || {
+    name: "Cliente Demonstração",
+    cidade: "São Paulo",
+    estado: "SP",
+    bairro: "Centro",
+    endereco: "Rua Exemplo",
+    numero: "123",
+    cep: "01001-000",
+    quantity: 1,
+    total: "47,90",
+    shippingLabel: "PAC",
+    shippingDays: "de 7 até 10 dias",
+    email: "cliente@email.com",
+    phone: "(11) 99999-9999",
+  };
 
-  if (!order) return null;
 
   const now = new Date();
   const formatDate = (d: Date) =>
