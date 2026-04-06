@@ -10,7 +10,7 @@ const product = PRODUCTS[0];
 
 type BotMessage = {
   id: number;
-  from: "bot" | "user" | "typing";
+  from: "bot" | "user" | "typing" | "product";
   text: string;
   quickReplies?: string[];
 };
