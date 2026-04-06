@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Share2, ShoppingCart, MoreHorizontal, Bookmark, Truck, ChevronRight, CheckCircle, Star } from "lucide-react";
 import { getProductById } from "@/data/products";
 import BuyConfirmSheet from "@/components/BuyConfirmSheet";
+import ProductPageReviews from "@/components/ProductPageReviews";
 
 const AUTO_PLAY_INTERVAL = 3000;
 
@@ -191,6 +192,11 @@ const ProductPage = () => {
           </div>
         </div>
       </div>
+
+      <div className="h-2 bg-secondary" />
+
+      {/* Reviews */}
+      <ProductPageReviews />
 
       {/* Bottom Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-40 flex items-center max-w-lg mx-auto">
