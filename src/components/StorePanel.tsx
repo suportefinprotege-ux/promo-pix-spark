@@ -54,6 +54,16 @@ const PRODUCTS = [
     installments: "4x sem juros",
     sold: 2341,
   },
+  {
+    id: 6,
+    name: "Conjunto de Pratos Fundos Com 06 Peças 22,5cm Ryo Maresia Oxford",
+    image: "https://panpannovapromo.site/ofertas/pratos/images/img2.jpg",
+    price: 34.90,
+    oldPrice: 149.00,
+    discount: "77% OFF",
+    installments: "3x sem juros",
+    sold: 4175,
+  },
 ];
 
 const TABS = ["Página inicial", "Produtos", "Categorias"];
