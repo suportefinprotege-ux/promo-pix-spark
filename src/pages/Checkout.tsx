@@ -636,8 +636,8 @@ const CheckoutPage = () => {
                 <h3 className="font-bold text-foreground text-lg">Pagamento</h3>
 
                 {/* Pix option selected */}
-                <div className="border-2 border-foreground rounded-xl p-4 flex items-center gap-3">
-                  <img src={pixLogo} alt="Pix" className="h-6" />
+                <div className="border-2 border-foreground rounded-xl p-4 w-fit flex items-center justify-center">
+                  <img src={pixLogo} alt="Pix" className="h-10 object-contain" />
                 </div>
 
                 <div className="border border-border rounded-xl p-4">
