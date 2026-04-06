@@ -147,7 +147,7 @@ const Admin = () => {
           </Card>
           <Card>
             <CardContent className="p-4 flex items-center gap-3">
-              <DollarSign className="w-8 h-8 text-green-600" />
+              <DollarSign className="w-8 h-8" style={{ color: "hsl(var(--success))" }} />
               <div>
                 <p className="text-xs text-muted-foreground">Receita</p>
                 <p className="text-xl font-bold">{formatCents(totalRevenue)}</p>
@@ -156,7 +156,7 @@ const Admin = () => {
           </Card>
           <Card>
             <CardContent className="p-4 flex items-center gap-3">
-              <CheckCircle2 className="w-8 h-8 text-green-600" />
+              <CheckCircle2 className="w-8 h-8" style={{ color: "hsl(var(--success))" }} />
               <div>
                 <p className="text-xs text-muted-foreground">Aprovados</p>
                 <p className="text-xl font-bold">{approvedCount}</p>
@@ -165,7 +165,7 @@ const Admin = () => {
           </Card>
           <Card>
             <CardContent className="p-4 flex items-center gap-3">
-              <Clock className="w-8 h-8 text-yellow-500" />
+              <Clock className="w-8 h-8" style={{ color: "hsl(var(--warning))" }} />
               <div>
                 <p className="text-xs text-muted-foreground">Pendentes</p>
                 <p className="text-xl font-bold">{pendingCount}</p>
