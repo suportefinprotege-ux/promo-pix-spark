@@ -160,6 +160,17 @@ const Admin = () => {
           <MessageCircle className="w-4 h-4" />
           Chat
         </button>
+        <button
+          onClick={() => setActiveTab("atendimentos")}
+          className={`flex-1 py-3 text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+            activeTab === "atendimentos"
+              ? "text-primary border-b-2 border-primary"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Headset className="w-4 h-4" />
+          Atendimentos
+        </button>
       </div>
 
       {activeTab === "chat" ? (
