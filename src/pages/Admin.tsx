@@ -177,6 +177,8 @@ const Admin = () => {
         <div className="h-[calc(100vh-106px)]">
           <AdminChat />
         </div>
+      ) : activeTab === "atendimentos" ? (
+        <AdminAtendimentos onOpenChat={() => setActiveTab("chat")} />
       ) : (
         <div className="p-4 max-w-7xl mx-auto space-y-4">
           {/* Stats */}
