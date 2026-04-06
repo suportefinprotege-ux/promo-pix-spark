@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Send, ChevronRight, Smile, Plus } from "lucide-react";
+import { X, Send, ChevronRight, Smile, Plus, ShoppingCart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { PRODUCTS } from "@/data/products";
 
@@ -9,7 +10,7 @@ const product = PRODUCTS[0];
 
 type BotMessage = {
   id: number;
-  from: "bot" | "user" | "typing";
+  from: "bot" | "user" | "typing" | "product";
   text: string;
   quickReplies?: string[];
 };
@@ -75,6 +76,7 @@ interface ChatBotProps {
 }
 
 const ChatBot = ({ open, onClose }: ChatBotProps) => {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState<BotMessage[]>([]);
   const [vendorMessages, setVendorMessages] = useState<ChatMessage[]>([]);
   const [askedQuestions, setAskedQuestions] = useState<Set<string>>(new Set());
@@ -84,9 +86,26 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
   const [showProduct, setShowProduct] = useState(true);
+  const [productSent, setProductSent] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
   const visitorId = useRef(getVisitorId());
+
+  const handleSendProduct = () => {
+    setProductSent(true);
+    setShowProduct(false);
+    const productMsg: BotMessage = {
+      id: Date.now(),
+      from: "product",
+      text: product.name,
+    };
+    setMessages((prev) => [...prev, productMsg]);
+  };
+
+  const handleBuyFromChat = () => {
+    onClose();
+    navigate("/checkout");
+  };
 
   // Init session for vendor messages
   useEffect(() => {
@@ -299,6 +318,30 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
                   )}
                 </div>
               </div>
+            ) : msg.from === "product" ? (
+              <div className="flex justify-end">
+                <div className="bg-background rounded-2xl shadow-sm border border-border p-3 max-w-[85%]">
+                  <div className="flex items-center gap-3 mb-3">
+                    <img
+                      src={product.images[0]}
+                      alt={product.name}
+                      className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
+                    />
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-foreground line-clamp-2">{product.name}</p>
+                      <p className="text-xs text-muted-foreground">{product.sold.toLocaleString("pt-BR")} vendidos</p>
+                      <p className="text-sm font-bold text-[#EE4D2D] mt-1">R$ {product.price.toFixed(2).replace(".", ",")}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleBuyFromChat}
+                    className="w-full bg-[#EE4D2D] hover:bg-[#d73a1d] text-white text-sm font-semibold py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                  >
+                    <ShoppingCart className="w-4 h-4" />
+                    Comprar agora
+                  </button>
+                </div>
+              </div>
             ) : (
               <div className="flex justify-end items-end gap-1.5">
                 <span className="text-green-500 text-xs">✓</span>
@@ -374,7 +417,7 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
             <p className="text-sm font-medium text-foreground truncate">{product.name}</p>
             <p className="text-xs text-muted-foreground">{product.sold.toLocaleString("pt-BR")} vendidos</p>
           </div>
-          <button className="bg-[#EE4D2D] hover:bg-[#d73a1d] text-white text-sm font-semibold px-4 py-2 rounded-lg flex-shrink-0 transition-colors">
+          <button onClick={handleSendProduct} className="bg-[#EE4D2D] hover:bg-[#d73a1d] text-white text-sm font-semibold px-4 py-2 rounded-lg flex-shrink-0 transition-colors">
             Enviar
           </button>
         </div>
