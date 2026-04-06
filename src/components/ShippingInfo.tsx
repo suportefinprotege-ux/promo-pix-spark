@@ -13,9 +13,8 @@ const ShippingInfo = () => {
                 <span className="bg-success text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
                   Frete grátis
                 </span>
-                <span className="text-sm text-muted-foreground line-through">R$ 9,60</span>
               </div>
-              <p className="text-sm text-foreground mt-0.5">Receba até 7–10 de abr (PAC)</p>
+              <p className="text-sm text-foreground mt-0.5">Receba em até 5 dias úteis (Loggi)</p>
             </div>
           </div>
           <ChevronRight className="w-4 h-4 text-muted-foreground" />
