@@ -48,6 +48,19 @@ const BuyConfirmSheet = ({ open, onClose, product }: BuyConfirmSheetProps) => {
 
         <button
           onClick={() => {
+            if (product) {
+              const alreadyInCart = items.some((i) => i.product.id === product.id);
+              if (!alreadyInCart) {
+                addToCart(product);
+                ttqTrack("AddToCart", {
+                  content_id: String(product.id),
+                  content_name: product.name,
+                  content_type: "product",
+                  value: product.price,
+                  currency: "BRL",
+                });
+              }
+            }
             onClose();
             navigate("/checkout");
           }}
