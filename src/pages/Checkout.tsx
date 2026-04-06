@@ -115,6 +115,12 @@ const CheckoutPage = () => {
       setPixData(data);
       setPaymentStatus("created");
       setExpirySeconds(480);
+
+      ttqTrack("PlaceAnOrder", {
+        value: totalCentsValue / 100,
+        currency: "BRL",
+      });
+      ttqTrack("AddPaymentInfo", { payment_method: "pix" });
       // Show processing for 2 seconds then show QR
       setTimeout(() => {
         setSubStep("qrcode");
