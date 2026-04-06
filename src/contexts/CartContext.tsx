@@ -16,6 +16,7 @@ type CartContextType = {
   clearCart: () => void;
   totalItems: number;
   totalCents: number;
+  freeShipping: boolean;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -66,10 +67,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     (sum, i) => sum + Math.round(i.product.price * 100) * i.quantity,
     0
   );
+  const freeShipping = totalCents >= 15000;
 
   return (
     <CartContext.Provider
-      value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalCents }}
+      value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalCents, freeShipping }}
     >
       {children}
     </CartContext.Provider>

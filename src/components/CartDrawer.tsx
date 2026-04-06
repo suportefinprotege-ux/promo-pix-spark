@@ -8,7 +8,7 @@ interface CartDrawerProps {
 }
 
 const CartDrawer = ({ open, onClose }: CartDrawerProps) => {
-  const { items, updateQuantity, removeFromCart, totalItems, totalCents } = useCart();
+  const { items, updateQuantity, removeFromCart, totalItems, totalCents, freeShipping } = useCart();
   const navigate = useNavigate();
 
   if (!open) return null;
@@ -97,12 +97,20 @@ const CartDrawer = ({ open, onClose }: CartDrawerProps) => {
                 R$ {(totalCents / 100).toFixed(2).replace(".", ",")}
               </span>
             </div>
+            {freeShipping && (
+              <p className="text-xs text-green-600 font-medium">🎉 Frete grátis aplicado (compra acima de R$ 150)</p>
+            )}
+            {!freeShipping && totalCents > 0 && (
+              <p className="text-xs text-muted-foreground">
+                Falta R$ {((15000 - totalCents) / 100).toFixed(2).replace(".", ",")} para frete grátis
+              </p>
+            )}
             <button
               onClick={handleCheckout}
               className="w-full bg-sale text-white font-bold py-4 rounded-2xl text-lg flex flex-col items-center leading-tight"
             >
               <span>Finalizar compra</span>
-              <span className="text-sm font-normal opacity-90">Frete grátis</span>
+              {freeShipping && <span className="text-sm font-normal opacity-90">Frete grátis</span>}
             </button>
           </div>
         )}
