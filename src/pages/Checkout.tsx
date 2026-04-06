@@ -85,7 +85,7 @@ const CheckoutPage = () => {
       const totalCentsValue = cartTotalCents + shippingTotal;
 
       const { data, error } = await supabase.functions.invoke("create-pix", {
-        body: { value: totalCents },
+        body: { value: totalCentsValue },
       });
       if (error) throw error;
 
