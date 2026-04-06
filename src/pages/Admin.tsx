@@ -135,6 +135,32 @@ const Admin = () => {
         </div>
       </header>
 
+      {/* Tabs */}
+      <div className="flex border-b bg-background sticky top-[53px] z-40">
+        <button
+          onClick={() => setActiveTab("orders")}
+          className={`flex-1 py-3 text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+            activeTab === "orders"
+              ? "text-primary border-b-2 border-primary"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Package className="w-4 h-4" />
+          Pedidos
+        </button>
+        <button
+          onClick={() => setActiveTab("chat")}
+          className={`flex-1 py-3 text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
+            activeTab === "chat"
+              ? "text-primary border-b-2 border-primary"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <MessageCircle className="w-4 h-4" />
+          Chat
+        </button>
+      </div>
+
       <div className="p-4 max-w-7xl mx-auto space-y-4">
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
