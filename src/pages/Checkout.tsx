@@ -163,12 +163,11 @@ const CheckoutPage = () => {
         setPaymentStatus(result.status);
         if (result.status === "paid") {
           stopPolling();
-          // Update order status in database
+          // Update order status via secure edge function
           if (orderId) {
-            await supabase
-              .from("orders")
-              .update({ payment_status: "paid", paid_at: new Date().toISOString() })
-              .eq("id", orderId);
+            await supabase.functions.invoke("update-order", {
+              body: { order_id: orderId, payment_status: "paid" },
+            });
           }
         }
       }
