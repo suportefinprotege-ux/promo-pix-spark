@@ -213,10 +213,11 @@ const CheckoutPage = () => {
   useEffect(() => {
     if (paymentStatus === "paid") {
       const selectedOption = SHIPPING_OPTIONS.find((o) => o.id === selectedShipping);
-      const shippingTotal = selectedOption?.price || 0;
-      const totalValue = ((PRODUCT_VALUE_CENTS * quantity + shippingTotal) / 100).toFixed(2).replace(".", ",");
+      const shippingTotal = freeShipping ? 0 : (selectedOption?.price || 0);
+      const totalValue = ((cartTotalCents + shippingTotal) / 100).toFixed(2).replace(".", ",");
       
       const timer = setTimeout(() => {
+        clearCart();
         navigate("/pedido", {
           state: {
             name,
@@ -226,7 +227,7 @@ const CheckoutPage = () => {
             endereco,
             numero,
             cep,
-            quantity,
+            quantity: totalItems,
             total: totalValue,
             shippingLabel: selectedOption?.label || "PAC",
             shippingDays: selectedOption?.days || "",
@@ -239,8 +240,8 @@ const CheckoutPage = () => {
     }
   }, [paymentStatus]);
 
-  const shippingCost = SHIPPING_OPTIONS.find((o) => o.id === selectedShipping)?.price || 0;
-  const productTotal = PRODUCT_VALUE_CENTS * quantity;
+  const shippingCost = freeShipping ? 0 : (SHIPPING_OPTIONS.find((o) => o.id === selectedShipping)?.price || 0);
+  const productTotal = cartTotalCents;
   const grandTotal = productTotal + shippingCost;
   const total = (grandTotal / 100).toFixed(2).replace(".", ",");
   const subtotal = (productTotal / 100).toFixed(2).replace(".", ",");
