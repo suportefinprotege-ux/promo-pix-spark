@@ -4,6 +4,7 @@ import { ArrowLeft, Share2, ShoppingCart, MoreHorizontal, Bookmark, Truck, Chevr
 import { getProductById } from "@/data/products";
 import BuyConfirmSheet from "@/components/BuyConfirmSheet";
 import ProductPageReviews from "@/components/ProductPageReviews";
+import ProductPageDescription from "@/components/ProductPageDescription";
 
 const AUTO_PLAY_INTERVAL = 3000;
 
@@ -192,6 +193,11 @@ const ProductPage = () => {
           </div>
         </div>
       </div>
+
+      <div className="h-2 bg-secondary" />
+
+      {/* Description */}
+      <ProductPageDescription />
 
       <div className="h-2 bg-secondary" />
 
