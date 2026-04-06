@@ -1,6 +1,7 @@
 import { Store, MessageCircle } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { PRODUCTS } from "@/data/products";
+import { ttqTrack } from "@/lib/tiktok-pixel";
 import { toast } from "sonner";
 
 interface BottomBarProps {
