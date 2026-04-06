@@ -2,11 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Copy, Check, Loader2, Minus, Plus, ChevronDown, ShieldCheck, ArrowLeft, Smartphone, QrCode, CheckCircle2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useCart } from "@/contexts/CartContext";
 import tiktokLogo from "@/assets/faixa_2.png";
 import tiktokShopBanner from "@/assets/faixa_1.jpg";
 import pixLogo from "@/assets/pix-logo.png";
-
-const PRODUCT_VALUE_CENTS = 4790;
 
 type SubStep = "form" | "shipping" | "payment-method" | "processing" | "qrcode";
 
