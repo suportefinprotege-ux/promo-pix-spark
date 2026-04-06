@@ -405,37 +405,43 @@ const CheckoutPage = () => {
               <h3 className="font-bold text-foreground">Seu carrinho</h3>
               <div className="flex items-center gap-2">
                 <span className="bg-primary text-primary-foreground text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                  {quantity}
+                  {totalItems}
                 </span>
                 <ChevronDown className="w-4 h-4 text-muted-foreground" />
               </div>
             </div>
-            <div className="flex items-center gap-3 pb-3">
-              <img
-                src="https://panpannovapromo.site/ofertas/pratos/images/img1.jpg"
-                alt="Produto"
-                className="w-14 h-14 rounded-lg object-cover"
-              />
-              <div className="flex-1">
-                <p className="font-semibold text-sm text-foreground">Conjunto 30 Peças Perfeitas</p>
-                <p className="text-xs text-sale font-medium">Últimos unidades</p>
+            {items.map((item) => (
+              <div key={item.product.id} className="flex items-center gap-3 pb-3">
+                <img
+                  src={item.product.thumbnailImage}
+                  alt={item.product.name}
+                  className="w-14 h-14 rounded-lg object-cover"
+                />
+                <div className="flex-1">
+                  <p className="font-semibold text-sm text-foreground line-clamp-1">{item.product.name}</p>
+                  <p className="text-xs text-sale font-medium">R$ {item.product.price.toFixed(2).replace(".", ",")}</p>
+                </div>
+                <div className="flex items-center gap-0 border border-border rounded-full">
+                  <button
+                    onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                    className="w-8 h-8 flex items-center justify-center text-sale"
+                  >
+                    <Minus className="w-3.5 h-3.5" />
+                  </button>
+                  <span className="text-sm font-medium w-6 text-center text-foreground">{item.quantity}</span>
+                  <button
+                    onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                    disabled={item.quantity >= 2}
+                    className="w-8 h-8 flex items-center justify-center text-primary disabled:opacity-30"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
-              <div className="flex items-center gap-0 border border-border rounded-full">
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-8 h-8 flex items-center justify-center text-sale"
-                >
-                  <Minus className="w-3.5 h-3.5" />
-                </button>
-                <span className="text-sm font-medium w-6 text-center text-foreground">{quantity}</span>
-                <button
-                  onClick={() => setQuantity(Math.min(2, quantity + 1))}
-                  className="w-8 h-8 flex items-center justify-center text-primary"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
+            ))}
+            {items.length === 0 && (
+              <p className="text-sm text-muted-foreground text-center py-4">Carrinho vazio</p>
+            )}
             <div className="border-t border-border pt-3 space-y-1.5">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Subtotal</span>
@@ -445,6 +451,9 @@ const CheckoutPage = () => {
                 <span className="text-muted-foreground">Frete</span>
                 <span className={`${shippingCost === 0 ? "text-success font-medium" : "text-foreground"}`}>{freteLabel}</span>
               </div>
+              {freeShipping && (
+                <p className="text-xs text-success font-medium">🎉 Frete grátis aplicado!</p>
+              )}
               <div className="flex justify-between text-sm font-bold pt-1.5 border-t border-border">
                 <span className="text-foreground">Total</span>
                 <span className="text-sale">R$ {total}</span>
