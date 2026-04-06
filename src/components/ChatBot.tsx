@@ -318,6 +318,30 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
                   )}
                 </div>
               </div>
+            ) : msg.from === "product" ? (
+              <div className="flex justify-end">
+                <div className="bg-background rounded-2xl shadow-sm border border-border p-3 max-w-[85%]">
+                  <div className="flex items-center gap-3 mb-3">
+                    <img
+                      src={product.images[0]}
+                      alt={product.name}
+                      className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
+                    />
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-foreground line-clamp-2">{product.name}</p>
+                      <p className="text-xs text-muted-foreground">{product.sold.toLocaleString("pt-BR")} vendidos</p>
+                      <p className="text-sm font-bold text-[#EE4D2D] mt-1">R$ {product.price.toFixed(2).replace(".", ",")}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleBuyFromChat}
+                    className="w-full bg-[#EE4D2D] hover:bg-[#d73a1d] text-white text-sm font-semibold py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                  >
+                    <ShoppingCart className="w-4 h-4" />
+                    Comprar agora
+                  </button>
+                </div>
+              </div>
             ) : (
               <div className="flex justify-end items-end gap-1.5">
                 <span className="text-green-500 text-xs">✓</span>
