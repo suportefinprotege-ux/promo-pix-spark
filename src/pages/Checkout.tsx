@@ -10,14 +10,10 @@ const PRODUCT_VALUE_CENTS = 4790;
 
 type SubStep = "form" | "shipping" | "payment-method" | "processing" | "qrcode";
 
-import correiosLogo from "@/assets/correios-logo.webp";
 import loggiLogo from "@/assets/loggi-logo.png";
-import sedexLogo from "@/assets/sedex-logo.png";
 
 const SHIPPING_OPTIONS = [
-  { id: "free", label: "PAC", days: "de 7 até 10 dias", price: 0, priceLabel: "Grátis", logo: correiosLogo },
-  { id: "loggi", label: "Transportadora Loggi", days: "de 3 até 5 dias úteis", price: 1523, priceLabel: "R$15,23", logo: loggiLogo },
-  { id: "full", label: "SEDEX", days: "de 2 até 3 dias úteis", price: 2670, priceLabel: "R$26,70", logo: sedexLogo },
+  { id: "loggi", label: "Transportadora Loggi", days: "até 5 dias úteis", price: 0, priceLabel: "Grátis", logo: loggiLogo },
 ];
 
 const CheckoutPage = () => {
