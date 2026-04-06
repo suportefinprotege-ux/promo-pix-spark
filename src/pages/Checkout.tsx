@@ -17,13 +17,13 @@ const SHIPPING_OPTIONS = [
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
+  const { items, updateQuantity, totalCents: cartTotalCents, totalItems, freeShipping, clearCart } = useCart();
   const [copied, setCopied] = useState(false);
   const [email, setEmail] = useState("");
   const [noEmail, setNoEmail] = useState(false);
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
   const [cpf, setCpf] = useState("");
-  const [quantity, setQuantity] = useState(1);
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [subStep, setSubStep] = useState<SubStep>("form");
   const [loading, setLoading] = useState(false);
