@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Share2, ShoppingCart, MoreHorizontal, Bookmark, Truck, ChevronRight, CheckCircle, Star } from "lucide-react";
 import { getProductById } from "@/data/products";
 import BuyConfirmSheet from "@/components/BuyConfirmSheet";
+import ProductPageReviews from "@/components/ProductPageReviews";
 
 const AUTO_PLAY_INTERVAL = 3000;
 
