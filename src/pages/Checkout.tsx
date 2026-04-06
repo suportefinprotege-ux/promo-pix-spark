@@ -385,25 +385,30 @@ const CheckoutPage = () => {
 
           {/* Step indicators */}
           <div className="bg-background mx-3 mt-3 rounded-xl p-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between relative">
+              {/* Connecting lines */}
+              <div className="absolute top-4 left-0 right-0 flex items-center justify-center px-16 z-0">
+                <div className={`flex-1 h-0.5 ${visualStep > 1 ? "bg-success" : "bg-border"}`} />
+                <div className={`flex-1 h-0.5 ${visualStep > 2 ? "bg-success" : "bg-border"}`} />
+              </div>
               {stepLabels.map((label, i) => {
                 const stepNum = (i + 1) as 1 | 2 | 3;
                 const isActive = visualStep === stepNum;
                 const isDone = visualStep > stepNum;
                 return (
-                  <div key={label} className="flex flex-col items-center gap-1.5 flex-1">
+                  <div key={label} className="flex flex-col items-center gap-1.5 flex-1 z-10">
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
                         isActive
                           ? "bg-foreground text-background"
                           : isDone
-                          ? "bg-success text-success-foreground"
+                          ? "bg-success text-white"
                           : "bg-muted text-muted-foreground"
                       }`}
                     >
                       {isDone ? <Check className="w-4 h-4" /> : stepNum}
                     </div>
-                    <span className={`text-xs font-medium ${isActive ? "text-foreground" : "text-muted-foreground"}`}>
+                    <span className={`text-xs font-medium ${isActive ? "text-foreground" : isDone ? "text-success" : "text-muted-foreground"}`}>
                       {label}
                     </span>
                   </div>
