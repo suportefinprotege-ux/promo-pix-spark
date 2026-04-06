@@ -90,10 +90,9 @@ const CheckoutPage = () => {
       });
       if (error) throw error;
 
-      // Save order to database
-      const { data: orderData, error: orderError } = await supabase
-        .from("orders")
-        .insert({
+      // Save order via secure edge function (server-side validation & pricing)
+      const { data: orderData, error: orderError } = await supabase.functions.invoke("create-order", {
+        body: {
           name,
           email: email || null,
           phone,
@@ -105,15 +104,10 @@ const CheckoutPage = () => {
           cidade,
           estado,
           quantity,
-          product_total_cents: PRODUCT_VALUE_CENTS * quantity,
-          shipping_cents: shippingTotal,
-          total_cents: totalCents,
           shipping_method: selectedShipping,
           pix_transaction_id: data.id,
-          payment_status: "pending",
-        })
-        .select("id")
-        .single();
+        },
+      });
 
       if (orderError) console.error("Erro ao salvar pedido:", orderError);
       else setOrderId(orderData.id);
