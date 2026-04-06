@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useCart } from "@/contexts/CartContext";
 import { ttqIdentify } from "@/lib/tiktok-pixel";
 import { trackTikTokEvent } from "@/lib/tiktok-server";
+import { toast } from "sonner";
 import tiktokLogo from "@/assets/faixa_2.png";
 import tiktokShopBanner from "@/assets/faixa_1.jpg";
 import pixLogo from "@/assets/pix-logo.png";
