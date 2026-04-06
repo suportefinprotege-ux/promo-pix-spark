@@ -4,6 +4,7 @@ import { Copy, Check, Loader2, Minus, Plus, ChevronDown, ShieldCheck, ArrowLeft,
 import { supabase } from "@/integrations/supabase/client";
 import tiktokLogo from "@/assets/faixa_2.png";
 import tiktokShopBanner from "@/assets/faixa_1.jpg";
+import pixLogo from "@/assets/pix-logo.png";
 
 const PRODUCT_VALUE_CENTS = 4790;
 
