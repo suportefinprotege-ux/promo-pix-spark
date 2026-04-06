@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Allow anonymous inserts with pending status" ON public.orders;
