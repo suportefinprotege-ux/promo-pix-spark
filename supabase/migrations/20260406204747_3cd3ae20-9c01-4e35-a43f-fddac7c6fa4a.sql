@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Select own order by pix_transaction_id" ON public.orders;
