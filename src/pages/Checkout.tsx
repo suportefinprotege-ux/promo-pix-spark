@@ -75,14 +75,49 @@ const CheckoutPage = () => {
     }
   };
 
+  const [orderId, setOrderId] = useState<string | null>(null);
+
   const createPixCharge = async () => {
     setLoading(true);
     setSubStep("processing");
     try {
+      const selectedOption = SHIPPING_OPTIONS.find((o) => o.id === selectedShipping);
+      const shippingTotal = selectedOption?.price || 0;
+      const totalCents = PRODUCT_VALUE_CENTS * quantity + shippingTotal;
+
       const { data, error } = await supabase.functions.invoke("create-pix", {
-        body: { value: PRODUCT_VALUE_CENTS * quantity },
+        body: { value: totalCents },
       });
       if (error) throw error;
+
+      // Save order to database
+      const { data: orderData, error: orderError } = await supabase
+        .from("orders")
+        .insert({
+          name,
+          email: email || null,
+          phone,
+          cpf,
+          cep,
+          endereco,
+          numero,
+          bairro,
+          cidade,
+          estado,
+          quantity,
+          product_total_cents: PRODUCT_VALUE_CENTS * quantity,
+          shipping_cents: shippingTotal,
+          total_cents: totalCents,
+          shipping_method: selectedShipping,
+          pix_transaction_id: data.id,
+          payment_status: "pending",
+        })
+        .select("id")
+        .single();
+
+      if (orderError) console.error("Erro ao salvar pedido:", orderError);
+      else setOrderId(orderData.id);
+
       setPixData(data);
       setPaymentStatus("created");
       setExpirySeconds(480);
@@ -126,7 +161,16 @@ const CheckoutPage = () => {
       const result = await response.json();
       if (result.status) {
         setPaymentStatus(result.status);
-        if (result.status === "paid") stopPolling();
+        if (result.status === "paid") {
+          stopPolling();
+          // Update order status in database
+          if (orderId) {
+            await supabase
+              .from("orders")
+              .update({ payment_status: "paid", paid_at: new Date().toISOString() })
+              .eq("id", orderId);
+          }
+        }
       }
     } catch (err) {
       console.error("Erro ao verificar pagamento:", err);
