@@ -2,7 +2,10 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Share2, ShoppingCart, MoreHorizontal, Bookmark, Truck, ChevronRight, CheckCircle, Star } from "lucide-react";
 import { getProductById } from "@/data/products";
-import BuyConfirmSheet from "@/components/BuyConfirmSheet";
+import { useCart } from "@/contexts/CartContext";
+import { trackTikTokEvent } from "@/lib/tiktok-server";
+import { toast } from "sonner";
+import CartDrawer from "@/components/CartDrawer";
 import ProductPageReviews from "@/components/ProductPageReviews";
 import ProductPageDescription from "@/components/ProductPageDescription";
 
@@ -11,9 +14,10 @@ const AUTO_PLAY_INTERVAL = 3000;
 const ProductPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { addToCart, items } = useCart();
   const product = getProductById(Number(id));
   const [current, setCurrent] = useState(0);
-  const [buySheetOpen, setBuySheetOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -27,7 +31,9 @@ const ProductPage = () => {
 
   useEffect(() => {
     resetTimer();
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
   }, [resetTimer]);
 
   if (!product) {
@@ -51,12 +57,49 @@ const ProductPage = () => {
     setTouchStart(null);
   };
 
+  const trackAddToCart = () => {
+    trackTikTokEvent("AddToCart", {
+      content_id: String(product.id),
+      content_name: product.name,
+      content_type: "product",
+      value: product.price,
+      currency: "BRL",
+    });
+  };
+
+  const handleAddToCart = () => {
+    const added = addToCart(product);
+
+    if (added) {
+      trackAddToCart();
+      toast.success("Adicionado ao carrinho!");
+      setCartOpen(true);
+      return;
+    }
+
+    toast.error("Limite de 2 unidades por produto!");
+  };
+
+  const handleBuyNow = () => {
+    const alreadyInCart = items.some((item) => item.product.id === product.id);
+
+    if (!alreadyInCart) {
+      const added = addToCart(product);
+      if (!added) {
+        toast.error("Limite de 2 unidades por produto!");
+        return;
+      }
+      trackAddToCart();
+    }
+
+    navigate("/checkout");
+  };
+
   const savings = (product.oldPrice - product.price).toFixed(2).replace(".", ",");
   const discountPercent = Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100);
 
   return (
     <div className="min-h-screen bg-background max-w-lg mx-auto pb-16">
-      {/* Header */}
       <div className="sticky top-0 z-30 bg-background border-b border-border px-3 py-2.5 flex items-center gap-3">
         <button onClick={() => navigate(-1)} className="text-foreground">
           <ArrowLeft className="w-5 h-5" />
@@ -65,11 +108,12 @@ const ProductPage = () => {
           {product.name.slice(0, 30)}...
         </div>
         <Share2 className="w-5 h-5 text-foreground" />
-        <ShoppingCart className="w-5 h-5 text-foreground" />
+        <button onClick={() => setCartOpen(true)} className="text-foreground">
+          <ShoppingCart className="w-5 h-5" />
+        </button>
         <MoreHorizontal className="w-5 h-5 text-foreground" />
       </div>
 
-      {/* Image Carousel */}
       <div className="relative bg-background">
         <div
           className="w-full aspect-square overflow-hidden"
@@ -86,7 +130,10 @@ const ProductPage = () => {
           {product.images.map((img, i) => (
             <button
               key={i}
-              onClick={() => { setCurrent(i); resetTimer(); }}
+              onClick={() => {
+                setCurrent(i);
+                resetTimer();
+              }}
               className={`w-14 h-14 flex-shrink-0 rounded-md overflow-hidden border-2 transition-colors ${
                 i === current ? "border-primary" : "border-transparent"
               }`}
@@ -97,7 +144,6 @@ const ProductPage = () => {
         </div>
       </div>
 
-      {/* Price Section */}
       <div className="bg-gradient-to-r from-[#f53d2d] to-[#ff6633] px-3 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -134,7 +180,6 @@ const ProductPage = () => {
 
       <div className="h-2 bg-secondary" />
 
-      {/* Product Info */}
       <div className="px-3 py-2 space-y-2">
         <div className="flex items-start justify-between gap-2">
           <h1 className="text-sm font-semibold text-foreground leading-snug flex-1">
@@ -153,7 +198,6 @@ const ProductPage = () => {
 
       <div className="h-2 bg-secondary" />
 
-      {/* Shipping */}
       <div className="space-y-0">
         <div className="px-3 py-3 border-b border-border">
           <div className="flex items-center justify-between">
@@ -196,25 +240,22 @@ const ProductPage = () => {
 
       <div className="h-2 bg-secondary" />
 
-      {/* Description */}
       <ProductPageDescription />
 
       <div className="h-2 bg-secondary" />
 
-      {/* Reviews */}
       <ProductPageReviews />
 
-      {/* Bottom Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-40 flex items-center max-w-lg mx-auto">
         <div className="flex-1 flex gap-2 px-2 py-2">
           <button
-            onClick={() => setBuySheetOpen(true)}
+            onClick={handleAddToCart}
             className="flex-1 py-2.5 text-sm font-semibold text-primary border-2 border-primary rounded-full bg-background"
           >
             Adicionar ao carrinho
           </button>
           <button
-            onClick={() => setBuySheetOpen(true)}
+            onClick={handleBuyNow}
             className="flex-1 py-2.5 text-sm font-bold bg-sale text-white rounded-full flex flex-col items-center leading-tight"
           >
             <span>Comprar agora</span>
@@ -223,11 +264,7 @@ const ProductPage = () => {
         </div>
       </div>
 
-      <BuyConfirmSheet
-        open={buySheetOpen}
-        onClose={() => setBuySheetOpen(false)}
-        product={product}
-      />
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
     </div>
   );
 };
