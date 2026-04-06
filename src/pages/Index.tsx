@@ -1,6 +1,7 @@
 import { useState } from "react";
 import TopHeader from "@/components/TopHeader";
 import ChatBot from "@/components/ChatBot";
+import StorePanel from "@/components/StorePanel";
 import ImageCarousel from "@/components/ImageCarousel";
 import PriceSection from "@/components/PriceSection";
 import ProductInfo from "@/components/ProductInfo";
@@ -15,6 +16,7 @@ import BuyConfirmSheet from "@/components/BuyConfirmSheet";
 const Index = () => {
   const [buySheetOpen, setBuySheetOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const [storeOpen, setStoreOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background max-w-lg mx-auto pb-16">
@@ -32,12 +34,17 @@ const Index = () => {
       <ProductDescription />
       <div className="h-2 bg-secondary" />
       <CustomerReviews />
-      <BottomBar onBuy={() => setBuySheetOpen(true)} onChat={() => setChatOpen(true)} />
+      <BottomBar
+        onBuy={() => setBuySheetOpen(true)}
+        onChat={() => setChatOpen(true)}
+        onStore={() => setStoreOpen(true)}
+      />
       <BuyConfirmSheet
         open={buySheetOpen}
         onClose={() => setBuySheetOpen(false)}
       />
       <ChatBot open={chatOpen} onClose={() => setChatOpen(false)} />
+      <StorePanel open={storeOpen} onClose={() => setStoreOpen(false)} onBuy={() => { setStoreOpen(false); setBuySheetOpen(true); }} />
     </div>
   );
 };
