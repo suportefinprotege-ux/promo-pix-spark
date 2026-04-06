@@ -204,6 +204,10 @@ const CheckoutPage = () => {
   };
 
   useEffect(() => {
+    ttqTrack("InitiateCheckout", {
+      value: cartTotalCents / 100,
+      currency: "BRL",
+    });
     return () => {
       stopPolling();
       if (timerRef.current) clearInterval(timerRef.current);
