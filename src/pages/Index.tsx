@@ -1,5 +1,6 @@
 import { useState } from "react";
 import TopHeader from "@/components/TopHeader";
+import ChatBot from "@/components/ChatBot";
 import ImageCarousel from "@/components/ImageCarousel";
 import PriceSection from "@/components/PriceSection";
 import ProductInfo from "@/components/ProductInfo";
