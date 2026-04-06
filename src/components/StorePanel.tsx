@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { X, ShoppingCart, Search } from "lucide-react";
 import { PRODUCTS } from "@/data/products";
 
@@ -15,7 +14,6 @@ interface StorePanelProps {
 const StorePanel = ({ open, onClose }: StorePanelProps) => {
   const [activeTab, setActiveTab] = useState("Produtos");
   const [activeFilter, setActiveFilter] = useState("Recomendado");
-  const navigate = useNavigate();
 
   if (!open) return null;
 
@@ -101,7 +99,7 @@ const StorePanel = ({ open, onClose }: StorePanelProps) => {
                   <p className="text-xs text-muted-foreground line-through">R$ {product.oldPrice.toFixed(2).replace(".", ",")}</p>
                 </div>
                 <button
-                  onClick={() => { onClose(); navigate(`/produto/${product.id}`); }}
+                  onClick={onClose}
                   className="bg-sale text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1.5"
                 >
                   <ShoppingCart className="w-3.5 h-3.5" />
