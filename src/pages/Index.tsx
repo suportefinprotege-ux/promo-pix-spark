@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { PRODUCTS } from "@/data/products";
+import { ttqTrack } from "@/lib/tiktok-pixel";
 import TopHeader from "@/components/TopHeader";
 import ChatBot from "@/components/ChatBot";
 import StorePanel from "@/components/StorePanel";
