@@ -161,7 +161,16 @@ const CheckoutPage = () => {
       const result = await response.json();
       if (result.status) {
         setPaymentStatus(result.status);
-        if (result.status === "paid") stopPolling();
+        if (result.status === "paid") {
+          stopPolling();
+          // Update order status in database
+          if (orderId) {
+            await supabase
+              .from("orders")
+              .update({ payment_status: "paid", paid_at: new Date().toISOString() })
+              .eq("id", orderId);
+          }
+        }
       }
     } catch (err) {
       console.error("Erro ao verificar pagamento:", err);
