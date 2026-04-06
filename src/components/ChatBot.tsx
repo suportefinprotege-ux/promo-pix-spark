@@ -94,25 +94,13 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
     setInput("");
   };
 
-  return (
-    <>
-      {/* Floating button */}
-      {!open && (
-        <button
-          onClick={() => setOpen(true)}
-          className="fixed bottom-20 right-4 z-50 w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
-          aria-label="Abrir chat"
-        >
-          <MessageCircle className="w-6 h-6" />
-        </button>
-      )}
+  if (!open) return null;
 
-      {/* Chat window */}
-      {open && (
-        <div className="fixed inset-0 z-50 flex flex-col bg-background max-w-lg mx-auto">
-          {/* Header */}
-          <div className="bg-background border-b border-border px-4 py-3 flex items-center gap-3">
-            <button onClick={() => setOpen(false)} className="text-muted-foreground">
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col bg-background max-w-lg mx-auto">
+      {/* Header */}
+      <div className="bg-background border-b border-border px-4 py-3 flex items-center gap-3">
+        <button onClick={onClose} className="text-muted-foreground">
               <X className="w-5 h-5" />
             </button>
             <img
