@@ -605,7 +605,7 @@ const CheckoutPage = () => {
                           )}
                         </div>
                         <div className="w-20 h-10 flex items-center justify-center flex-shrink-0">
-                          <img src={option.logo} alt={option.label} className="max-h-10 max-w-20 object-contain" />
+                          <img src={option.logo} alt={option.label} className="max-h-10 max-w-20 object-contain mix-blend-multiply" />
                         </div>
                         <div className="flex-1">
                           <p className="font-semibold text-sm text-foreground">{option.label}</p>
