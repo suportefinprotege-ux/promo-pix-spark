@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { PRODUCTS } from "@/data/products";
-import { ttqTrack } from "@/lib/tiktok-pixel";
+import { trackTikTokEvent } from "@/lib/tiktok-server";
 import TopHeader from "@/components/TopHeader";
 import ChatBot from "@/components/ChatBot";
 import StorePanel from "@/components/StorePanel";
@@ -24,7 +24,7 @@ const Index = () => {
 
   useEffect(() => {
     const p = PRODUCTS[0];
-    ttqTrack("ViewContent", {
+    trackTikTokEvent("ViewContent", {
       content_id: String(p.id),
       content_name: p.name,
       content_type: "product",

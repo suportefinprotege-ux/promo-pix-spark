@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Copy, Check, Loader2, Minus, Plus, ChevronDown, ShieldCheck, ArrowLeft, Smartphone, QrCode, CheckCircle2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useCart } from "@/contexts/CartContext";
-import { ttqTrack, ttqIdentify } from "@/lib/tiktok-pixel";
+import { ttqIdentify } from "@/lib/tiktok-pixel";
+import { trackTikTokEvent } from "@/lib/tiktok-server";
 import tiktokLogo from "@/assets/faixa_2.png";
 import tiktokShopBanner from "@/assets/faixa_1.jpg";
 import pixLogo from "@/assets/pix-logo.png";
@@ -116,11 +117,11 @@ const CheckoutPage = () => {
       setPaymentStatus("created");
       setExpirySeconds(480);
 
-      ttqTrack("PlaceAnOrder", {
+      trackTikTokEvent("PlaceAnOrder", {
         value: totalCentsValue / 100,
         currency: "BRL",
-      });
-      ttqTrack("AddPaymentInfo", { payment_method: "pix" });
+      }, { email: email || undefined, phone: phone || undefined });
+      trackTikTokEvent("AddPaymentInfo", { payment_method: "pix" }, { email: email || undefined, phone: phone || undefined });
       // Show processing for 2 seconds then show QR
       setTimeout(() => {
         setSubStep("qrcode");
@@ -163,10 +164,10 @@ const CheckoutPage = () => {
         setPaymentStatus(result.status);
         if (result.status === "paid") {
           stopPolling();
-          ttqTrack("CompletePayment", {
+          trackTikTokEvent("CompletePayment", {
             value: cartTotalCents / 100,
             currency: "BRL",
-          });
+          }, { email: email || undefined, phone: phone || undefined });
           // Update order status via secure edge function
           if (orderId) {
             await supabase.functions.invoke("update-order", {
@@ -214,7 +215,7 @@ const CheckoutPage = () => {
   };
 
   useEffect(() => {
-    ttqTrack("InitiateCheckout", {
+    trackTikTokEvent("InitiateCheckout", {
       value: cartTotalCents / 100,
       currency: "BRL",
     });
@@ -585,7 +586,7 @@ const CheckoutPage = () => {
                   onClick={() => {
                     if (name && cpf && phone) {
                       ttqIdentify({ email: email || undefined, phone_number: phone });
-                      ttqTrack("ClickButton", { content_name: "ir_para_entrega" });
+                      trackTikTokEvent("ClickButton", { content_name: "ir_para_entrega" }, { email: email || undefined, phone: phone || undefined });
                       setSubStep("shipping");
                     }
                   }}

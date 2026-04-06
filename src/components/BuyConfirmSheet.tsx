@@ -2,7 +2,7 @@ import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { Product } from "@/data/products";
 import { useCart } from "@/contexts/CartContext";
-import { ttqTrack } from "@/lib/tiktok-pixel";
+import { trackTikTokEvent } from "@/lib/tiktok-server";
 
 interface BuyConfirmSheetProps {
   open: boolean;
@@ -52,7 +52,7 @@ const BuyConfirmSheet = ({ open, onClose, product }: BuyConfirmSheetProps) => {
               const alreadyInCart = items.some((i) => i.product.id === product.id);
               if (!alreadyInCart) {
                 addToCart(product);
-                ttqTrack("AddToCart", {
+                trackTikTokEvent("AddToCart", {
                   content_id: String(product.id),
                   content_name: product.name,
                   content_type: "product",

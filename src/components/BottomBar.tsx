@@ -1,7 +1,7 @@
 import { Store, MessageCircle } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { PRODUCTS } from "@/data/products";
-import { ttqTrack } from "@/lib/tiktok-pixel";
+import { trackTikTokEvent } from "@/lib/tiktok-server";
 import { toast } from "sonner";
 
 interface BottomBarProps {
@@ -18,7 +18,7 @@ const BottomBar = ({ onBuy, onChat, onStore, onCartOpen }: BottomBarProps) => {
     const product = PRODUCTS[0];
     const added = addToCart(product);
     if (added) {
-      ttqTrack("AddToCart", {
+      trackTikTokEvent("AddToCart", {
         content_id: String(product.id),
         content_name: product.name,
         content_type: "product",
