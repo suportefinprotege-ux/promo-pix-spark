@@ -192,6 +192,11 @@ const ProductPage = () => {
         </div>
       </div>
 
+      <div className="h-2 bg-secondary" />
+
+      {/* Reviews */}
+      <ProductPageReviews />
+
       {/* Bottom Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-40 flex items-center max-w-lg mx-auto">
         <div className="flex-1 flex gap-2 px-2 py-2">
