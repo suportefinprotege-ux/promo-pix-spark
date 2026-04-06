@@ -28,7 +28,7 @@ const CheckoutPage = () => {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [subStep, setSubStep] = useState<SubStep>("form");
   const [loading, setLoading] = useState(false);
-  const [selectedShipping, setSelectedShipping] = useState("free");
+  const [selectedShipping, setSelectedShipping] = useState("loggi");
   const [pixData, setPixData] = useState<{
     id: string;
     qr_code: string;
