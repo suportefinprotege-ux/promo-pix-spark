@@ -2,6 +2,7 @@ import { Store, MessageCircle } from "lucide-react";
 
 interface BottomBarProps {
   onBuy: () => void;
+  onChat: () => void;
 }
 
 const BottomBar = ({ onBuy }: BottomBarProps) => {
