@@ -14,6 +14,7 @@ import BuyConfirmSheet from "@/components/BuyConfirmSheet";
 
 const Index = () => {
   const [buySheetOpen, setBuySheetOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background max-w-lg mx-auto pb-16">
@@ -31,12 +32,12 @@ const Index = () => {
       <ProductDescription />
       <div className="h-2 bg-secondary" />
       <CustomerReviews />
-      <BottomBar onBuy={() => setBuySheetOpen(true)} />
+      <BottomBar onBuy={() => setBuySheetOpen(true)} onChat={() => setChatOpen(true)} />
       <BuyConfirmSheet
         open={buySheetOpen}
         onClose={() => setBuySheetOpen(false)}
       />
-      <ChatBot />
+      <ChatBot open={chatOpen} onClose={() => setChatOpen(false)} />
     </div>
   );
 };
