@@ -1,6 +1,8 @@
 import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { Product } from "@/data/products";
+import { useCart } from "@/contexts/CartContext";
+import { ttqTrack } from "@/lib/tiktok-pixel";
 
 interface BuyConfirmSheetProps {
   open: boolean;
@@ -10,6 +12,7 @@ interface BuyConfirmSheetProps {
 
 const BuyConfirmSheet = ({ open, onClose, product }: BuyConfirmSheetProps) => {
   const navigate = useNavigate();
+  const { addToCart, items } = useCart();
 
   if (!open) return null;
 
