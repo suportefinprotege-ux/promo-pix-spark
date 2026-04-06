@@ -16,8 +16,8 @@ import sedexLogo from "@/assets/sedex-logo.png";
 
 const SHIPPING_OPTIONS = [
   { id: "free", label: "PAC", days: "de 7 até 10 dias", price: 0, priceLabel: "Grátis", logo: correiosLogo },
-  { id: "loggi", label: "Transportadora Loggi", days: "de 3 até 5 dias úteis", price: 1523, priceLabel: "R$15,23", logo: loggiLogo },
-  { id: "full", label: "SEDEX", days: "de 2 até 3 dias úteis", price: 2670, priceLabel: "R$26,70", logo: sedexLogo },
+  { id: "loggi", label: "Transportadora Loggi", days: "de 3 até 5 dias úteis", price: 549, priceLabel: "R$5,49", logo: loggiLogo },
+  { id: "full", label: "SEDEX", days: "de 2 até 3 dias úteis", price: 990, priceLabel: "R$9,90", logo: sedexLogo },
 ];
 
 const CheckoutPage = () => {
