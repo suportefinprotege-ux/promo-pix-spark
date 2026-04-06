@@ -546,6 +546,7 @@ const CheckoutPage = () => {
                     placeholder="Nome e Sobrenome"
                   />
                 </div>
+                <div className="border-2 border-dashed border-border rounded-xl p-4 space-y-3">
                   <p className="font-bold text-sm text-foreground">
                     Usamos seus dados de forma 100% segura para garantir a sua satisfação:
                   </p>
