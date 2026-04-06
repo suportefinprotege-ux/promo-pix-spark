@@ -102,7 +102,7 @@ const CheckoutPage = () => {
           bairro,
           cidade,
           estado,
-          quantity,
+          quantity: totalItems,
           shipping_method: selectedShipping,
           pix_transaction_id: data.id,
         },
