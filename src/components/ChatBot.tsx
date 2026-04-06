@@ -181,8 +181,7 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
             </button>
           </div>
         </div>
-      )}
-    </>
+    </div>
   );
 };
 
