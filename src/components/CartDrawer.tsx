@@ -8,7 +8,7 @@ interface CartDrawerProps {
 }
 
 const CartDrawer = ({ open, onClose }: CartDrawerProps) => {
-  const { items, updateQuantity, removeFromCart, totalItems, totalCents } = useCart();
+  const { items, updateQuantity, removeFromCart, totalItems, totalCents, freeShipping } = useCart();
   const navigate = useNavigate();
 
   if (!open) return null;
