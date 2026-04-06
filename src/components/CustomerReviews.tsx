@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ThumbsUp, MoreHorizontal } from "lucide-react";
 
 const REVIEWS = [
@@ -64,6 +65,12 @@ const REVIEWS = [
 ];
 
 const CustomerReviews = () => {
+  const [likes, setLikes] = useState<Record<number, number>>({});
+
+  const handleLike = (index: number) => {
+    setLikes((prev) => ({ ...prev, [index]: (prev[index] || 0) + 1 }));
+  };
+
   return (
     <div className="px-3 py-3">
       <div className="flex items-center justify-between mb-3">
@@ -112,7 +119,17 @@ const CustomerReviews = () => {
               <span className="text-xs text-muted-foreground">{review.date}</span>
               <div className="flex items-center gap-4">
                 <MoreHorizontal className="w-5 h-5 text-muted-foreground" />
-                <ThumbsUp className="w-5 h-5 text-muted-foreground" />
+                <button
+                  onClick={() => handleLike(i)}
+                  className="flex items-center gap-1 transition-colors"
+                >
+                  <ThumbsUp
+                    className={`w-5 h-5 ${likes[i] ? "text-primary fill-primary" : "text-muted-foreground"}`}
+                  />
+                  {likes[i] && (
+                    <span className="text-xs text-primary font-medium">{likes[i]}</span>
+                  )}
+                </button>
               </div>
             </div>
           </div>
