@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { X, ShoppingCart, Search } from "lucide-react";
 import { PRODUCTS } from "@/data/products";
 
@@ -14,6 +15,7 @@ interface StorePanelProps {
 const StorePanel = ({ open, onClose }: StorePanelProps) => {
   const [activeTab, setActiveTab] = useState("Produtos");
   const [activeFilter, setActiveFilter] = useState("Recomendado");
+  const navigate = useNavigate();
 
   if (!open) return null;
 

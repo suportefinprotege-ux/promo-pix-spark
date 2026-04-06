@@ -80,9 +80,6 @@ const ProductPage = () => {
             className="w-full h-full object-contain"
           />
         </div>
-        <div className="absolute bottom-3 right-3 bg-foreground/60 text-primary-foreground text-xs px-2 py-1 rounded-full">
-          {current + 1}/{product.images.length}
-        </div>
         <div className="flex gap-1.5 px-3 py-2 overflow-x-auto">
           {product.images.map((img, i) => (
             <button
