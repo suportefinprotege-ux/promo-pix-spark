@@ -88,7 +88,10 @@ const StorePanel = ({ open, onClose }: StorePanelProps) => {
             <img src={product.thumbnailImage} alt={product.name} className="w-28 h-28 rounded-lg object-cover flex-shrink-0" />
             <div className="flex-1 flex flex-col justify-between min-w-0">
               <div>
-                <p className="text-sm text-foreground font-medium line-clamp-2 leading-snug">{product.name}</p>
+                <p
+                  className="text-sm text-foreground font-medium line-clamp-2 leading-snug cursor-pointer active:text-primary"
+                  onClick={() => { onClose(); navigate(`/produto/${product.id}`); }}
+                >{product.name}</p>
                 <div className="flex items-center gap-1.5 mt-1">
                   <span className="bg-sale/10 text-sale text-[10px] font-bold px-1.5 py-0.5 rounded">🔥 {product.discount}</span>
                   <span className="bg-sale/10 text-sale text-[10px] font-bold px-1.5 py-0.5 rounded">{product.installments}</span>
