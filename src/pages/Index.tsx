@@ -44,7 +44,7 @@ const Index = () => {
         onClose={() => setBuySheetOpen(false)}
       />
       <ChatBot open={chatOpen} onClose={() => setChatOpen(false)} />
-      <StorePanel open={storeOpen} onClose={() => setStoreOpen(false)} onBuy={() => { setStoreOpen(false); setBuySheetOpen(true); }} />
+      <StorePanel open={storeOpen} onClose={() => setStoreOpen(false)} onBuy={() => { setStoreOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />
     </div>
   );
 };
