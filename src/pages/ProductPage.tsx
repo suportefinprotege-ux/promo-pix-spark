@@ -207,7 +207,10 @@ const ProductPage = () => {
       {/* Bottom Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-40 flex items-center max-w-lg mx-auto">
         <div className="flex-1 flex gap-2 px-2 py-2">
-          <button className="flex-1 py-2.5 text-sm font-semibold text-primary border-2 border-primary rounded-full bg-background">
+          <button
+            onClick={() => setBuySheetOpen(true)}
+            className="flex-1 py-2.5 text-sm font-semibold text-primary border-2 border-primary rounded-full bg-background"
+          >
             Adicionar ao carrinho
           </button>
           <button
