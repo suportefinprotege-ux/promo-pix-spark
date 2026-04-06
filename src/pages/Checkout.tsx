@@ -163,6 +163,10 @@ const CheckoutPage = () => {
         setPaymentStatus(result.status);
         if (result.status === "paid") {
           stopPolling();
+          ttqTrack("CompletePayment", {
+            value: cartTotalCents / 100,
+            currency: "BRL",
+          });
           // Update order status via secure edge function
           if (orderId) {
             await supabase.functions.invoke("update-order", {
