@@ -1,3 +1,5 @@
+import { ThumbsUp, MoreHorizontal } from "lucide-react";
+
 const REVIEWS = [
   {
     name: "M**a M**a",
