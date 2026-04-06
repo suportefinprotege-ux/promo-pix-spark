@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { PRODUCTS } from "@/data/products";
+import { ttqTrack } from "@/lib/tiktok-pixel";
 import TopHeader from "@/components/TopHeader";
 import ChatBot from "@/components/ChatBot";
 import StorePanel from "@/components/StorePanel";
@@ -19,6 +21,17 @@ const Index = () => {
   const [chatOpen, setChatOpen] = useState(false);
   const [storeOpen, setStoreOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+
+  useEffect(() => {
+    const p = PRODUCTS[0];
+    ttqTrack("ViewContent", {
+      content_id: String(p.id),
+      content_name: p.name,
+      content_type: "product",
+      value: p.price,
+      currency: "BRL",
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-background max-w-lg mx-auto pb-16">
