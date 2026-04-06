@@ -195,6 +195,11 @@ const ProductPage = () => {
 
       <div className="h-2 bg-secondary" />
 
+      {/* Description */}
+      <ProductDescription />
+
+      <div className="h-2 bg-secondary" />
+
       {/* Reviews */}
       <ProductPageReviews />
 
