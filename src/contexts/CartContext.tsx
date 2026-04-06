@@ -16,6 +16,13 @@ type CartContextType = {
   clearCart: () => void;
   totalItems: number;
   totalCents: number;
+  freeShipping: boolean;
+};
+  removeFromCart: (productId: number) => void;
+  updateQuantity: (productId: number, quantity: number) => void;
+  clearCart: () => void;
+  totalItems: number;
+  totalCents: number;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
