@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useCart } from "@/contexts/CartContext";
 import { ttqIdentify } from "@/lib/tiktok-pixel";
 import { trackTikTokEvent } from "@/lib/tiktok-server";
+import { toast } from "sonner";
 import tiktokLogo from "@/assets/faixa_2.png";
 import tiktokShopBanner from "@/assets/faixa_1.jpg";
 import pixLogo from "@/assets/pix-logo.png";
@@ -25,7 +26,6 @@ const CheckoutPage = () => {
   const [noEmail, setNoEmail] = useState(false);
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
-  const [cpf, setCpf] = useState("");
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [subStep, setSubStep] = useState<SubStep>("form");
   const [loading, setLoading] = useState(false);
@@ -97,7 +97,7 @@ const CheckoutPage = () => {
           name,
           email: email || null,
           phone,
-          cpf,
+          cpf: "",
           cep,
           endereco,
           numero,
@@ -191,14 +191,6 @@ const CheckoutPage = () => {
       clearInterval(pollRef.current);
       pollRef.current = null;
     }
-  };
-
-  const formatCPF = (value: string) => {
-    const digits = value.replace(/\D/g, "").slice(0, 11);
-    return digits
-      .replace(/(\d{3})(\d)/, "$1.$2")
-      .replace(/(\d{3})(\d)/, "$1.$2")
-      .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
   };
 
   const formatPhone = (value: string) => {
@@ -555,17 +547,6 @@ const CheckoutPage = () => {
                     placeholder="Nome e Sobrenome"
                   />
                 </div>
-                <div>
-                  <label className="text-sm font-semibold text-foreground block mb-1.5">CPF</label>
-                  <input
-                    type="text"
-                    value={cpf}
-                    onChange={(e) => setCpf(formatCPF(e.target.value))}
-                    className="w-full border border-border rounded-xl px-4 py-3 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring"
-                    placeholder="123.456.789-12"
-                  />
-                </div>
-
                 <div className="border-2 border-dashed border-border rounded-xl p-4 space-y-3">
                   <p className="font-bold text-sm text-foreground">
                     Usamos seus dados de forma 100% segura para garantir a sua satisfação:
@@ -584,11 +565,13 @@ const CheckoutPage = () => {
 
                 <button
                   onClick={() => {
-                    if (name && cpf && phone) {
-                      ttqIdentify({ email: email || undefined, phone_number: phone });
-                      trackTikTokEvent("ClickButton", { content_name: "ir_para_entrega" }, { email: email || undefined, phone: phone || undefined });
-                      setSubStep("shipping");
-                    }
+                    const phoneDigits = phone.replace(/\D/g, "");
+                    if (!name.trim()) { toast.error("Preencha o nome completo"); return; }
+                    if (phoneDigits.length < 10) { toast.error("Preencha o telefone corretamente"); return; }
+                    if (!noEmail && email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast.error("E-mail inválido"); return; }
+                    ttqIdentify({ email: email || undefined, phone_number: phone });
+                    trackTikTokEvent("ClickButton", { content_name: "ir_para_entrega" }, { email: email || undefined, phone: phone || undefined });
+                    setSubStep("shipping");
                   }}
                   className="w-full bg-foreground text-background font-bold py-4 rounded-xl text-base uppercase tracking-wide"
                 >
@@ -724,7 +707,15 @@ const CheckoutPage = () => {
                     Voltar
                   </button>
                   <button
-                    onClick={() => setSubStep("payment-method")}
+                    onClick={() => {
+                      if (cep.length < 8) { toast.error("Preencha o CEP corretamente"); return; }
+                      if (!endereco.trim()) { toast.error("Preencha o endereço"); return; }
+                      if (!numero.trim()) { toast.error("Preencha o número"); return; }
+                      if (!bairro.trim()) { toast.error("Preencha o bairro"); return; }
+                      if (!cidade.trim()) { toast.error("Preencha a cidade"); return; }
+                      if (!estado.trim()) { toast.error("Preencha o estado"); return; }
+                      setSubStep("payment-method");
+                    }}
                     className="flex-1 bg-foreground text-background font-bold py-4 rounded-xl text-base uppercase tracking-wide"
                   >
                     IR PARA O PAGAMENTO
