@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ShieldCheck, Lock, CheckCircle2, Star, Package } from "lucide-react";
+import { ShieldCheck, Lock, CheckCircle2, Heart, ShoppingCart, Tag, ShoppingBag } from "lucide-react";
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -55,90 +55,133 @@ const Landing = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#1a1a2e] to-[#16213e] flex flex-col items-center justify-center px-4 text-white">
-      {/* Logo / Brand */}
-      <div className="mb-8 text-center animate-fade-in">
-        <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-orange-500/30">
-          <Package className="w-10 h-10 text-white" />
-        </div>
-        <h1 className="text-2xl font-bold tracking-tight">Ofertas Exclusivas</h1>
-        <p className="text-sm text-gray-400 mt-1">Acesso liberado por tempo limitado</p>
-      </div>
+    <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: "linear-gradient(180deg, #FFF5EE 0%, #FAE8DE 50%, #F5D6C6 100%)" }}>
+      
+      {/* Decorative circles */}
+      <div className="absolute top-10 left-10 w-32 h-32 rounded-full opacity-20" style={{ background: "#D4A088" }} />
+      <div className="absolute bottom-20 right-10 w-24 h-24 rounded-full opacity-15" style={{ background: "#C48B6E" }} />
 
-      {/* Progress Section */}
-      <div className="w-full max-w-sm bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 mb-6">
-        {/* Progress Bar */}
-        <div className="w-full bg-white/10 rounded-full h-3 mb-4 overflow-hidden">
-          <div
-            className="h-full rounded-full transition-all duration-100 ease-linear"
-            style={{
-              width: `${progress}%`,
-              background: loadingComplete
-                ? "linear-gradient(90deg, #22c55e, #16a34a)"
-                : "linear-gradient(90deg, #f97316, #ef4444)",
-            }}
-          />
+      {/* Main Card */}
+      <div className="relative z-10 w-full max-w-sm">
+        
+        {/* Shopping Cart Icon Area */}
+        <div className="flex justify-center mb-6 relative">
+          {/* Heart notification */}
+          <div className="absolute -top-2 right-16 animate-bounce">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center shadow-md" style={{ background: "#C48B6E" }}>
+              <Heart className="w-5 h-5 text-white fill-white" />
+            </div>
+          </div>
+          
+          {/* Cart */}
+          <div className="w-24 h-24 rounded-full flex items-center justify-center" style={{ background: "rgba(196, 139, 110, 0.15)" }}>
+            <ShoppingCart className="w-12 h-12" style={{ color: "#8B5E3C" }} />
+          </div>
+
+          {/* Tag */}
+          <div className="absolute bottom-0 left-20">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center shadow-sm" style={{ background: "#E8C4AD" }}>
+              <Tag className="w-4 h-4" style={{ color: "#6B4226" }} />
+            </div>
+          </div>
         </div>
 
-        {/* Step Text */}
-        <div className="flex items-center gap-2 justify-center min-h-[24px]">
-          {loadingComplete ? (
-            <CheckCircle2 className="w-4 h-4 text-green-400 animate-scale-in" />
-          ) : (
-            <div className="w-4 h-4 border-2 border-orange-400 border-t-transparent rounded-full animate-spin" />
-          )}
-          <span
-            className={`text-sm font-medium ${
-              loadingComplete ? "text-green-400" : "text-gray-300"
-            }`}
+        {/* Brand Name */}
+        <div className="text-center mb-2">
+          <h1 className="text-5xl font-bold italic" style={{ color: "#8B5E3C", fontFamily: "'Georgia', serif" }}>
+            Achados
+          </h1>
+          <h2 className="text-4xl font-bold italic -mt-1" style={{ color: "#8B5E3C", fontFamily: "'Georgia', serif" }}>
+            da Oxford
+          </h2>
+        </div>
+
+        {/* Subtitle banner */}
+        <div className="flex justify-center mb-2">
+          <div className="px-6 py-1.5 rounded-sm" style={{ background: "#4A2C1A" }}>
+            <span className="text-white text-xs font-bold tracking-[0.2em] uppercase">de vendas</span>
+          </div>
+        </div>
+
+        {/* Tagline */}
+        <p className="text-center text-sm mb-8" style={{ color: "#8B7355" }}>
+          Os melhores produtos com os melhores preços!
+        </p>
+
+        {/* Shopping bag icon */}
+        <div className="flex justify-end pr-4 -mt-4 mb-4">
+          <ShoppingBag className="w-8 h-8 opacity-40" style={{ color: "#C48B6E" }} />
+        </div>
+
+        {/* Progress Section */}
+        <div className="rounded-2xl p-5 mb-5 border" style={{ background: "rgba(255,255,255,0.7)", borderColor: "rgba(196,139,110,0.2)" }}>
+          {/* Progress Bar */}
+          <div className="w-full rounded-full h-3 mb-3 overflow-hidden" style={{ background: "rgba(196,139,110,0.15)" }}>
+            <div
+              className="h-full rounded-full transition-all duration-100 ease-linear"
+              style={{
+                width: `${progress}%`,
+                background: loadingComplete
+                  ? "linear-gradient(90deg, #6B8E5A, #4A7A3A)"
+                  : "linear-gradient(90deg, #C48B6E, #8B5E3C)",
+              }}
+            />
+          </div>
+
+          {/* Step Text */}
+          <div className="flex items-center gap-2 justify-center min-h-[24px]">
+            {loadingComplete ? (
+              <CheckCircle2 className="w-4 h-4 animate-scale-in" style={{ color: "#4A7A3A" }} />
+            ) : (
+              <div className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: "#C48B6E", borderTopColor: "transparent" }} />
+            )}
+            <span className="text-sm font-medium" style={{ color: loadingComplete ? "#4A7A3A" : "#8B5E3C" }}>
+              {steps[currentStep]}
+            </span>
+          </div>
+
+          {/* Percentage */}
+          <p className="text-center text-2xl font-bold mt-2" style={{ color: "#4A2C1A" }}>
+            {Math.round(progress)}%
+          </p>
+        </div>
+
+        {/* Trust Badges */}
+        <div className="flex gap-4 justify-center mb-6">
+          <div className="flex items-center gap-1.5 text-xs" style={{ color: "#8B7355" }}>
+            <ShieldCheck className="w-4 h-4" style={{ color: "#6B8E5A" }} />
+            <span>Site Seguro</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs" style={{ color: "#8B7355" }}>
+            <Lock className="w-4 h-4" style={{ color: "#6B8E5A" }} />
+            <span>Dados Protegidos</span>
+          </div>
+        </div>
+
+        {/* CTA Button */}
+        {loadingComplete ? (
+          <button
+            onClick={handleEnter}
+            className="w-full py-4 text-white font-bold text-lg rounded-xl shadow-lg animate-scale-in active:scale-95 transition-transform"
+            style={{ background: "linear-gradient(135deg, #C48B6E, #8B5E3C)", boxShadow: "0 8px 24px rgba(139,94,60,0.35)" }}
           >
-            {steps[currentStep]}
-          </span>
-        </div>
+            🛒 ACESSAR OFERTAS
+          </button>
+        ) : (
+          <button
+            disabled
+            className="w-full py-4 font-bold text-lg rounded-xl cursor-not-allowed"
+            style={{ background: "rgba(196,139,110,0.2)", color: "#C48B6E" }}
+          >
+            Aguarde...
+          </button>
+        )}
 
-        {/* Percentage */}
-        <p className="text-center text-2xl font-bold mt-3">
-          {Math.round(progress)}%
+        {/* Footer */}
+        <p className="text-[10px] mt-5 text-center" style={{ color: "#B8A08A" }}>
+          Ao acessar, você concorda com nossos termos de uso e política de privacidade.
         </p>
       </div>
-
-      {/* Trust Badges */}
-      <div className="flex gap-4 mb-8">
-        <div className="flex items-center gap-1.5 text-xs text-gray-400">
-          <ShieldCheck className="w-4 h-4 text-green-400" />
-          <span>Site Seguro</span>
-        </div>
-        <div className="flex items-center gap-1.5 text-xs text-gray-400">
-          <Lock className="w-4 h-4 text-green-400" />
-          <span>Dados Protegidos</span>
-        </div>
-        <div className="flex items-center gap-1.5 text-xs text-gray-400">
-          <Star className="w-4 h-4 text-yellow-400" />
-          <span>4.7 ★</span>
-        </div>
-      </div>
-
-      {/* CTA Button */}
-      {loadingComplete ? (
-        <button
-          onClick={handleEnter}
-          className="w-full max-w-sm py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold text-lg rounded-xl shadow-lg shadow-orange-500/30 animate-scale-in active:scale-95 transition-transform"
-        >
-          🔓 ACESSAR OFERTAS
-        </button>
-      ) : (
-        <button
-          disabled
-          className="w-full max-w-sm py-4 bg-white/10 text-gray-500 font-bold text-lg rounded-xl cursor-not-allowed"
-        >
-          Aguarde...
-        </button>
-      )}
-
-      {/* Footer Info */}
-      <p className="text-[10px] text-gray-600 mt-6 text-center max-w-xs">
-        Ao acessar, você concorda com nossos termos de uso e política de privacidade.
-      </p>
     </div>
   );
 };
