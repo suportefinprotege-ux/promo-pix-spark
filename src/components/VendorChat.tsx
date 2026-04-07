@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Send } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { getChatSupabase, getVisitorId } from "@/lib/chat-client";
 
 const STORE_LOGO = "https://panpannovapromo.site/ofertas/pratos/images/logo_oxford.png";
 
