@@ -56,7 +56,7 @@ const Landing = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: "linear-gradient(180deg, #FFF5EE 0%, #FAE8DE 50%, #F5D6C6 100%)" }}>
+    <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: "#FFFFFF" }}>
       
       {/* Decorative circles */}
       <div className="absolute top-10 left-10 w-32 h-32 rounded-full opacity-20" style={{ background: "#D4A088" }} />
