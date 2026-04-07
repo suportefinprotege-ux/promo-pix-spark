@@ -31,7 +31,8 @@ serve(async (req) => {
     const timestamp = new Date().toISOString();
 
     const payload = {
-      pixel_code: PIXEL_CODE,
+      event_source: "web",
+      event_source_id: PIXEL_CODE,
       partner_name: "Lovable",
       test_event_code: undefined,
       data: [
