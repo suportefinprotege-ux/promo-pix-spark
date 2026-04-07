@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShieldCheck, Lock, CheckCircle2 } from "lucide-react";
-import logo from "@/assets/achados-da-rita-logo.png";
+import logo from "@/assets/achados-da-rita-logo-nobg.png";
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -56,9 +56,11 @@ const Landing = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: "#FFFFFF" }}>
+    <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: "linear-gradient(180deg, #FFF5EE 0%, #FAE8DE 50%, #F5D6C6 100%)" }}>
       
-      {/* Clean white background - no decorative elements */}
+      {/* Decorative circles */}
+      <div className="absolute top-10 left-10 w-32 h-32 rounded-full opacity-20" style={{ background: "#D4A088" }} />
+      <div className="absolute bottom-20 right-10 w-24 h-24 rounded-full opacity-15" style={{ background: "#C48B6E" }} />
 
       {/* Main Card */}
       <div className="relative z-10 w-full max-w-sm">
