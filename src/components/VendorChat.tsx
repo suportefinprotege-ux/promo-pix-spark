@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Send } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { getChatSupabase, getVisitorId } from "@/lib/chat-client";
 
 const STORE_LOGO = "https://panpannovapromo.site/ofertas/pratos/images/logo_oxford.png";
 
@@ -11,14 +11,6 @@ type ChatMessage = {
   created_at: string;
 };
 
-function getVisitorId() {
-  let id = localStorage.getItem("chat_visitor_id");
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem("chat_visitor_id", id);
-  }
-  return id;
-}
 
 const VendorChat = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -31,7 +23,7 @@ const VendorChat = () => {
   // Create or get session
   useEffect(() => {
     const initSession = async () => {
-      const { data: existing } = await supabase
+      const { data: existing } = await getChatSupabase()
         .from("chat_sessions")
         .select("id")
         .eq("visitor_id", visitorId.current)
@@ -43,7 +35,7 @@ const VendorChat = () => {
       if (existing) {
         setSessionId(existing.id);
       } else {
-        const { data: created } = await supabase
+        const { data: created } = await getChatSupabase()
           .from("chat_sessions")
           .insert({ visitor_id: visitorId.current })
           .select("id")
@@ -54,12 +46,12 @@ const VendorChat = () => {
     initSession();
   }, []);
 
-  // Fetch messages when session is ready
+  // Poll for messages
   useEffect(() => {
     if (!sessionId) return;
 
     const fetchMessages = async () => {
-      const { data } = await supabase
+      const { data } = await getChatSupabase()
         .from("chat_messages")
         .select("*")
         .eq("session_id", sessionId)
@@ -68,23 +60,8 @@ const VendorChat = () => {
     };
     fetchMessages();
 
-    // Realtime subscription
-    const channel = supabase
-      .channel(`chat-${sessionId}`)
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "chat_messages", filter: `session_id=eq.${sessionId}` },
-        (payload) => {
-          setMessages((prev) => {
-            const exists = prev.some((m) => m.id === (payload.new as ChatMessage).id);
-            if (exists) return prev;
-            return [...prev, payload.new as ChatMessage];
-          });
-        }
-      )
-      .subscribe();
-
-    return () => { supabase.removeChannel(channel); };
+    const interval = setInterval(fetchMessages, 3000);
+    return () => clearInterval(interval);
   }, [sessionId]);
 
   useEffect(() => {
@@ -97,13 +74,13 @@ const VendorChat = () => {
     const text = input.trim();
     setInput("");
 
-    await supabase.from("chat_messages").insert({
+    await getChatSupabase().from("chat_messages").insert({
       session_id: sessionId,
       sender_type: "customer",
       message: text,
     });
 
-    await supabase
+    await getChatSupabase()
       .from("chat_sessions")
       .update({ last_message_at: new Date().toISOString() })
       .eq("id", sessionId);

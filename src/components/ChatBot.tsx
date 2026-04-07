@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { X, Send, ChevronRight, Smile, Plus, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { getChatSupabase, getVisitorId } from "@/lib/chat-client";
 import { PRODUCTS } from "@/data/products";
 import { useCart } from "@/contexts/CartContext";
 
@@ -62,14 +62,6 @@ const ALL_QUESTIONS: { question: string; answer: string }[] = [
   },
 ];
 
-function getVisitorId() {
-  let id = localStorage.getItem("chat_visitor_id");
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem("chat_visitor_id", id);
-  }
-  return id;
-}
 
 interface ChatBotProps {
   open: boolean;
@@ -113,7 +105,7 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
   // Init session for vendor messages
   useEffect(() => {
     const initSession = async () => {
-      const { data: existing } = await supabase
+      const { data: existing } = await getChatSupabase()
         .from("chat_sessions")
         .select("id")
         .eq("visitor_id", visitorId.current)
@@ -125,7 +117,7 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
       if (existing) {
         setSessionId(existing.id);
       } else {
-        const { data: created } = await supabase
+        const { data: created } = await getChatSupabase()
           .from("chat_sessions")
           .insert({ visitor_id: visitorId.current })
           .select("id")
@@ -136,12 +128,12 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
     initSession();
   }, []);
 
-  // Realtime vendor messages
+  // Poll for vendor messages
   useEffect(() => {
     if (!sessionId) return;
 
     const fetchMessages = async () => {
-      const { data } = await supabase
+      const { data } = await getChatSupabase()
         .from("chat_messages")
         .select("*")
         .eq("session_id", sessionId)
@@ -150,22 +142,8 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
     };
     fetchMessages();
 
-    const channel = supabase
-      .channel(`chat-${sessionId}`)
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "chat_messages", filter: `session_id=eq.${sessionId}` },
-        (payload) => {
-          setVendorMessages((prev) => {
-            const exists = prev.some((m) => m.id === (payload.new as ChatMessage).id);
-            if (exists) return prev;
-            return [...prev, payload.new as ChatMessage];
-          });
-        }
-      )
-      .subscribe();
-
-    return () => { supabase.removeChannel(channel); };
+    const interval = setInterval(fetchMessages, 3000);
+    return () => clearInterval(interval);
   }, [sessionId]);
 
   // Init bot welcome
@@ -227,12 +205,12 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
     if (liveMode && sessionId) {
       // Send to vendor via supabase
       setSending(true);
-      await supabase.from("chat_messages").insert({
+      await getChatSupabase().from("chat_messages").insert({
         session_id: sessionId,
         sender_type: "customer",
         message: text,
       });
-      await supabase
+      await getChatSupabase()
         .from("chat_sessions")
         .update({ last_message_at: new Date().toISOString() })
         .eq("id", sessionId);

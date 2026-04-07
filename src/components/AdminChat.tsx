@@ -63,21 +63,11 @@ const AdminChat = () => {
 
   useEffect(() => {
     fetchSessions();
-
-    const channel = supabase
-      .channel("admin-chat-sessions")
-      .on("postgres_changes", { event: "*", schema: "public", table: "chat_sessions" }, () => {
-        fetchSessions();
-      })
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "chat_messages" }, () => {
-        fetchSessions();
-      })
-      .subscribe();
-
-    return () => { supabase.removeChannel(channel); };
+    const interval = setInterval(fetchSessions, 3000);
+    return () => clearInterval(interval);
   }, [fetchSessions]);
 
-  // Fetch messages for active session
+  // Poll messages for active session
   useEffect(() => {
     if (!activeSession) return;
 
@@ -91,22 +81,8 @@ const AdminChat = () => {
     };
     fetchMsgs();
 
-    const channel = supabase
-      .channel(`admin-chat-${activeSession}`)
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "chat_messages", filter: `session_id=eq.${activeSession}` },
-        (payload) => {
-          setMessages((prev) => {
-            const exists = prev.some((m) => m.id === (payload.new as ChatMsg).id);
-            if (exists) return prev;
-            return [...prev, payload.new as ChatMsg];
-          });
-        }
-      )
-      .subscribe();
-
-    return () => { supabase.removeChannel(channel); };
+    const interval = setInterval(fetchMsgs, 2000);
+    return () => clearInterval(interval);
   }, [activeSession]);
 
   useEffect(() => {
