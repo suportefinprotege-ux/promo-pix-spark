@@ -30,11 +30,9 @@ serve(async (req) => {
 
     const timestamp = new Date().toISOString();
 
-    const payload = {
+    const payload: Record<string, unknown> = {
       event_source: "web",
       event_source_id: PIXEL_CODE,
-      partner_name: "Lovable",
-      test_event_code: undefined,
       data: [
         {
           event,
@@ -50,9 +48,6 @@ serve(async (req) => {
         },
       ],
     };
-
-    // Remove undefined fields
-    if (!payload.test_event_code) delete payload.test_event_code;
 
     const response = await fetch(TIKTOK_EVENTS_URL, {
       method: "POST",
