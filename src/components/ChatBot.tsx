@@ -3,6 +3,7 @@ import { X, Send, ChevronRight, Smile, Plus, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { PRODUCTS } from "@/data/products";
+import { useCart } from "@/contexts/CartContext";
 
 const STORE_LOGO = "https://panpannovapromo.site/ofertas/pratos/images/logo_oxford.png";
 const STORE_NAME = "Oxford";
@@ -77,6 +78,7 @@ interface ChatBotProps {
 
 const ChatBot = ({ open, onClose }: ChatBotProps) => {
   const navigate = useNavigate();
+  const { setSingleItem } = useCart();
   const [messages, setMessages] = useState<BotMessage[]>([]);
   const [vendorMessages, setVendorMessages] = useState<ChatMessage[]>([]);
   const [askedQuestions, setAskedQuestions] = useState<Set<string>>(new Set());
@@ -103,6 +105,7 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
   };
 
   const handleBuyFromChat = () => {
+    setSingleItem(product);
     onClose();
     navigate("/checkout");
   };
