@@ -128,7 +128,7 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
     initSession();
   }, []);
 
-  // Realtime vendor messages
+  // Poll for vendor messages
   useEffect(() => {
     if (!sessionId) return;
 
@@ -142,22 +142,8 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
     };
     fetchMessages();
 
-    const channel = getChatSupabase()
-      .channel(`chat-${sessionId}`)
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "chat_messages", filter: `session_id=eq.${sessionId}` },
-        (payload) => {
-          setVendorMessages((prev) => {
-            const exists = prev.some((m) => m.id === (payload.new as ChatMessage).id);
-            if (exists) return prev;
-            return [...prev, payload.new as ChatMessage];
-          });
-        }
-      )
-      .subscribe();
-
-    return () => { getChatSupabase().removeChannel(channel); };
+    const interval = setInterval(fetchMessages, 3000);
+    return () => clearInterval(interval);
   }, [sessionId]);
 
   // Init bot welcome

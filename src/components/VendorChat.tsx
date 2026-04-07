@@ -46,7 +46,7 @@ const VendorChat = () => {
     initSession();
   }, []);
 
-  // Fetch messages when session is ready
+  // Poll for messages
   useEffect(() => {
     if (!sessionId) return;
 
@@ -60,23 +60,8 @@ const VendorChat = () => {
     };
     fetchMessages();
 
-    // Realtime subscription
-    const channel = getChatSupabase()
-      .channel(`chat-${sessionId}`)
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "chat_messages", filter: `session_id=eq.${sessionId}` },
-        (payload) => {
-          setMessages((prev) => {
-            const exists = prev.some((m) => m.id === (payload.new as ChatMessage).id);
-            if (exists) return prev;
-            return [...prev, payload.new as ChatMessage];
-          });
-        }
-      )
-      .subscribe();
-
-    return () => { getChatSupabase().removeChannel(channel); };
+    const interval = setInterval(fetchMessages, 3000);
+    return () => clearInterval(interval);
   }, [sessionId]);
 
   useEffect(() => {
