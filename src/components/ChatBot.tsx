@@ -106,7 +106,7 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
   // Init session for vendor messages
   useEffect(() => {
     const initSession = async () => {
-      const { data: existing } = await supabase
+      const { data: existing } = await getChatSupabase()
         .from("chat_sessions")
         .select("id")
         .eq("visitor_id", visitorId.current)
@@ -118,7 +118,7 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
       if (existing) {
         setSessionId(existing.id);
       } else {
-        const { data: created } = await supabase
+        const { data: created } = await getChatSupabase()
           .from("chat_sessions")
           .insert({ visitor_id: visitorId.current })
           .select("id")
@@ -134,7 +134,7 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
     if (!sessionId) return;
 
     const fetchMessages = async () => {
-      const { data } = await supabase
+      const { data } = await getChatSupabase()
         .from("chat_messages")
         .select("*")
         .eq("session_id", sessionId)
@@ -143,7 +143,7 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
     };
     fetchMessages();
 
-    const channel = supabase
+    const channel = getChatSupabase()
       .channel(`chat-${sessionId}`)
       .on(
         "postgres_changes",
@@ -158,7 +158,7 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
       )
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => { getChatSupabase().removeChannel(channel); };
   }, [sessionId]);
 
   // Init bot welcome
@@ -220,12 +220,12 @@ const ChatBot = ({ open, onClose }: ChatBotProps) => {
     if (liveMode && sessionId) {
       // Send to vendor via supabase
       setSending(true);
-      await supabase.from("chat_messages").insert({
+      await getChatSupabase().from("chat_messages").insert({
         session_id: sessionId,
         sender_type: "customer",
         message: text,
       });
-      await supabase
+      await getChatSupabase()
         .from("chat_sessions")
         .update({ last_message_at: new Date().toISOString() })
         .eq("id", sessionId);
