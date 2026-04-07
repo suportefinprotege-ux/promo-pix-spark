@@ -221,7 +221,7 @@ const CheckoutPage = () => {
 
   // Redirect to tracking page when payment is confirmed
   useEffect(() => {
-    if (paymentStatus === "paid") {
+    if (paymentStatus === "paid" || paymentStatus === "approved" || paymentStatus === "completed") {
       const selectedOption = SHIPPING_OPTIONS.find((o) => o.id === selectedShipping);
       const shippingTotal = freeShipping ? 0 : (selectedOption?.price || 0);
       const totalValue = ((cartTotalCents + shippingTotal) / 100).toFixed(2).replace(".", ",");
@@ -293,7 +293,7 @@ const CheckoutPage = () => {
       </div>
 
       {/* QR Code full page */}
-      {subStep === "qrcode" && !paymentStatus.includes("paid") ? (
+      {subStep === "qrcode" && !["paid", "approved", "completed"].includes(paymentStatus) ? (
         <div className="bg-background mx-3 mt-4 rounded-xl p-6 mb-4">
           <h2 className="text-xl font-bold text-center text-foreground mb-1">
             Falta pouco! Para finalizar a compra,
@@ -396,7 +396,7 @@ const CheckoutPage = () => {
             <Loader2 className="w-6 h-6 animate-spin text-success mx-auto" />
           </div>
         </div>
-      ) : paymentStatus === "paid" ? (
+      ) : ["paid", "approved", "completed"].includes(paymentStatus) ? (
         <div className="bg-background mx-3 mt-4 rounded-xl p-8 mb-4 text-center space-y-4">
           <div className="w-16 h-16 bg-success/20 rounded-full flex items-center justify-center mx-auto">
             <Check className="w-8 h-8 text-success" />
