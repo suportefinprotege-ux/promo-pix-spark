@@ -28,7 +28,8 @@ serve(async (req) => {
       );
     }
 
-    const response = await fetch(`${PUSHINPAY_API_URL}/${transactionId}`, {
+    // Try both endpoint variants
+    let response = await fetch(`${PUSHINPAY_API_URL}/${transactionId}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${PUSHINPAY_API_TOKEN}`,
@@ -36,7 +37,8 @@ serve(async (req) => {
       },
     });
 
-    const data = await response.json();
+    let data = await response.json();
+    console.log("check-pix response:", JSON.stringify(data));
 
     if (!response.ok) {
       return new Response(
