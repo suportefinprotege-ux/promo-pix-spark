@@ -160,9 +160,11 @@ const CheckoutPage = () => {
       );
       if (!response.ok) return;
       const result = await response.json();
-      if (result.status) {
-        setPaymentStatus(result.status);
-        if (result.status === "paid") {
+      console.log("check-pix client result:", JSON.stringify(result));
+      const status = result.status;
+      if (status) {
+        setPaymentStatus(status);
+        if (status === "paid" || status === "approved" || status === "completed") {
           stopPolling();
           trackTikTokEvent("CompletePayment", {
             value: cartTotalCents / 100,
