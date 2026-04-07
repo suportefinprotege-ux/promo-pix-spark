@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ShieldCheck, Lock, CheckCircle2, Heart, ShoppingCart, Tag, ShoppingBag } from "lucide-react";
+import { ShieldCheck, Lock, CheckCircle2 } from "lucide-react";
+import logo from "@/assets/achados-da-rita-logo.png";
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -64,53 +65,13 @@ const Landing = () => {
       {/* Main Card */}
       <div className="relative z-10 w-full max-w-sm">
         
-        {/* Shopping Cart Icon Area */}
-        <div className="flex justify-center mb-6 relative">
-          {/* Heart notification */}
-          <div className="absolute -top-2 right-16 animate-bounce">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center shadow-md" style={{ background: "#C48B6E" }}>
-              <Heart className="w-5 h-5 text-white fill-white" />
-            </div>
-          </div>
-          
-          {/* Cart */}
-          <div className="w-24 h-24 rounded-full flex items-center justify-center" style={{ background: "rgba(196, 139, 110, 0.15)" }}>
-            <ShoppingCart className="w-12 h-12" style={{ color: "#8B5E3C" }} />
-          </div>
-
-          {/* Tag */}
-          <div className="absolute bottom-0 left-20">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center shadow-sm" style={{ background: "#E8C4AD" }}>
-              <Tag className="w-4 h-4" style={{ color: "#6B4226" }} />
-            </div>
-          </div>
-        </div>
-
-        {/* Brand Name */}
-        <div className="text-center mb-2">
-          <h1 className="text-5xl font-bold italic" style={{ color: "#8B5E3C", fontFamily: "'Georgia', serif" }}>
-            Achados
-          </h1>
-          <h2 className="text-4xl font-bold italic -mt-1" style={{ color: "#8B5E3C", fontFamily: "'Georgia', serif" }}>
-            da Oxford
-          </h2>
-        </div>
-
-        {/* Subtitle banner */}
-        <div className="flex justify-center mb-2">
-          <div className="px-6 py-1.5 rounded-sm" style={{ background: "#4A2C1A" }}>
-            <span className="text-white text-xs font-bold tracking-[0.2em] uppercase">de vendas</span>
-          </div>
-        </div>
-
-        {/* Tagline */}
-        <p className="text-center text-sm mb-8" style={{ color: "#8B7355" }}>
-          Os melhores produtos com os melhores preços!
-        </p>
-
-        {/* Shopping bag icon */}
-        <div className="flex justify-end pr-4 -mt-4 mb-4">
-          <ShoppingBag className="w-8 h-8 opacity-40" style={{ color: "#C48B6E" }} />
+        {/* Logo */}
+        <div className="flex justify-center mb-6">
+          <img 
+            src={logo} 
+            alt="Achados da Rita" 
+            className="w-72 h-auto object-contain drop-shadow-lg"
+          />
         </div>
 
         {/* Progress Section */}
