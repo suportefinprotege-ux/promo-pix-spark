@@ -58,9 +58,7 @@ const Landing = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: "#FFFFFF" }}>
       
-      {/* Decorative circles */}
-      <div className="absolute top-10 left-10 w-32 h-32 rounded-full opacity-20" style={{ background: "#D4A088" }} />
-      <div className="absolute bottom-20 right-10 w-24 h-24 rounded-full opacity-15" style={{ background: "#C48B6E" }} />
+      {/* Clean white background - no decorative elements */}
 
       {/* Main Card */}
       <div className="relative z-10 w-full max-w-sm">
