@@ -63,14 +63,6 @@ const ALL_QUESTIONS: { question: string; answer: string }[] = [
   },
 ];
 
-function getVisitorId() {
-  let id = localStorage.getItem("chat_visitor_id");
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem("chat_visitor_id", id);
-  }
-  return id;
-}
 
 interface ChatBotProps {
   open: boolean;

@@ -12,14 +12,6 @@ type ChatMessage = {
   created_at: string;
 };
 
-function getVisitorId() {
-  let id = localStorage.getItem("chat_visitor_id");
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem("chat_visitor_id", id);
-  }
-  return id;
-}
 
 const VendorChat = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
