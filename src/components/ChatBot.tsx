@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { X, Send, ChevronRight, Smile, Plus, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { getChatSupabase, getVisitorId } from "@/lib/chat-client";
 import { PRODUCTS } from "@/data/products";
 import { useCart } from "@/contexts/CartContext";
