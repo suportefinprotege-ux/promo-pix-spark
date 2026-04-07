@@ -450,10 +450,23 @@ const CheckoutPage = () => {
             {items.length === 0 && (
               <p className="text-sm text-muted-foreground text-center py-4">Carrinho vazio</p>
             )}
-            <div className="border-t border-border pt-3 space-y-1.5">
+            {/* Coupon */}
+            <div className="border border-dashed border-success/60 bg-success/5 rounded-xl px-3 py-2.5 flex items-center gap-2 mt-1">
+              <span className="text-success text-xs">🏷️</span>
+              <span className="text-xs font-bold text-success uppercase tracking-wide">FIGUEROA80</span>
+              <span className="text-xs text-success ml-auto font-medium">
+                -R$ {(items.reduce((sum, i) => sum + Math.round((i.product.oldPrice - i.product.price) * 100) * i.quantity, 0) / 100).toFixed(2).replace(".", ",")}
+              </span>
+            </div>
+
+            <div className="border-t border-border pt-3 space-y-1.5 mt-3">
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Subtotal</span>
-                <span className="text-foreground">R$ {subtotal}</span>
+                <span className="text-muted-foreground">Subtotal (s/ cupom)</span>
+                <span className="text-muted-foreground line-through">R$ {(items.reduce((sum, i) => sum + Math.round(i.product.oldPrice * 100) * i.quantity, 0) / 100).toFixed(2).replace(".", ",")}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Desconto cupom</span>
+                <span className="text-success font-medium">-R$ {(items.reduce((sum, i) => sum + Math.round((i.product.oldPrice - i.product.price) * 100) * i.quantity, 0) / 100).toFixed(2).replace(".", ",")}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Frete</span>
