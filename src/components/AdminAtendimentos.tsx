@@ -74,14 +74,8 @@ const AdminAtendimentos = ({ onOpenChat }: AdminAtendimentosProps) => {
 
   useEffect(() => {
     fetchSessions();
-
-    const channel = supabase
-      .channel("atendimentos-realtime")
-      .on("postgres_changes", { event: "*", schema: "public", table: "chat_sessions" }, () => fetchSessions())
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "chat_messages" }, () => fetchSessions())
-      .subscribe();
-
-    return () => { supabase.removeChannel(channel); };
+    const interval = setInterval(fetchSessions, 3000);
+    return () => clearInterval(interval);
   }, [fetchSessions]);
 
   const handleCloseSession = async (id: string) => {
