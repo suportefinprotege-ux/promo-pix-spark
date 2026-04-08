@@ -628,6 +628,8 @@ const CheckoutPage = () => {
                     const phoneDigits = phone.replace(/\D/g, "");
                     if (!name.trim()) { toast.error("Preencha o nome completo"); return; }
                     if (phoneDigits.length < 10) { toast.error("Preencha o telefone corretamente"); return; }
+                    const cpfDigits = cpf.replace(/\D/g, "");
+                    if (cpfDigits.length !== 11) { toast.error("Preencha o CPF corretamente"); return; }
                     if (!noEmail && email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast.error("E-mail inválido"); return; }
                     ttqIdentify({ email: email || undefined, phone_number: phone });
                     trackTikTokEvent("ClickButton", { content_name: "ir_para_entrega" }, { email: email || undefined, phone: phone || undefined });
