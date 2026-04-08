@@ -97,8 +97,8 @@ const CheckoutPage = () => {
             document: { number: "00000000000", type: "cpf" },
           },
           items: items.map((item) => ({
-            title: item.name,
-            unitPrice: item.price,
+            title: item.product.name,
+            unitPrice: item.product.price,
             quantity: item.quantity,
             tangible: true,
           })),
