@@ -597,6 +597,16 @@ const CheckoutPage = () => {
                     placeholder="Nome e Sobrenome"
                   />
                 </div>
+                <div>
+                  <label className="text-sm font-semibold text-foreground block mb-1.5">CPF</label>
+                  <input
+                    type="tel"
+                    value={cpf}
+                    onChange={(e) => setCpf(formatCPF(e.target.value))}
+                    className="w-full border border-border rounded-xl px-4 py-3 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring"
+                    placeholder="000.000.000-00"
+                  />
+                </div>
                 <div className="border-2 border-dashed border-border rounded-xl p-4 space-y-3">
                   <p className="font-bold text-sm text-foreground">
                     Usamos seus dados de forma 100% segura para garantir a sua satisfação:
