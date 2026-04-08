@@ -96,7 +96,7 @@ const CheckoutPage = () => {
             name: name,
             email: email || "sem@email.com",
             phone: phoneDigits,
-            document: { number: "00000000000", type: "cpf" },
+            document: { number: cpf.replace(/\D/g, ""), type: "cpf" },
           },
           items: items.map((item) => ({
             title: item.product.name,
@@ -123,7 +123,7 @@ const CheckoutPage = () => {
           name,
           email: email || null,
           phone,
-          cpf: "",
+          cpf,
           cep,
           endereco,
           numero,
@@ -226,6 +226,14 @@ const CheckoutPage = () => {
     if (digits.length <= 2) return `(${digits}`;
     if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  };
+
+  const formatCPF = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 11);
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `${digits.slice(0, 3)}.${digits.slice(3)}`;
+    if (digits.length <= 9) return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`;
+    return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9)}`;
   };
 
   const formatTime = (s: number) => {
