@@ -27,10 +27,14 @@ serve(async (req) => {
       );
     }
 
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const postbackUrl = `${supabaseUrl}/functions/v1/blackcatpay-webhook`;
+
     const body: Record<string, unknown> = {
       amount: value,
       currency: "BRL",
       paymentMethod: "pix",
+      postbackUrl,
       items: items || [
         {
           title: "Pedido",
