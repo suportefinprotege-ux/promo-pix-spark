@@ -27,6 +27,7 @@ const CheckoutPage = () => {
   const [noEmail, setNoEmail] = useState(false);
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
+  const [cpf, setCpf] = useState("");
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [subStep, setSubStep] = useState<SubStep>("form");
   const [loading, setLoading] = useState(false);
@@ -95,7 +96,7 @@ const CheckoutPage = () => {
             name: name,
             email: email || "sem@email.com",
             phone: phoneDigits,
-            document: { number: "00000000000", type: "cpf" },
+            document: { number: cpf.replace(/\D/g, ""), type: "cpf" },
           },
           items: items.map((item) => ({
             title: item.product.name,
@@ -122,7 +123,7 @@ const CheckoutPage = () => {
           name,
           email: email || null,
           phone,
-          cpf: "",
+          cpf,
           cep,
           endereco,
           numero,
@@ -225,6 +226,14 @@ const CheckoutPage = () => {
     if (digits.length <= 2) return `(${digits}`;
     if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  };
+
+  const formatCPF = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 11);
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `${digits.slice(0, 3)}.${digits.slice(3)}`;
+    if (digits.length <= 9) return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`;
+    return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9)}`;
   };
 
   const formatTime = (s: number) => {
@@ -588,6 +597,16 @@ const CheckoutPage = () => {
                     placeholder="Nome e Sobrenome"
                   />
                 </div>
+                <div>
+                  <label className="text-sm font-semibold text-foreground block mb-1.5">CPF</label>
+                  <input
+                    type="tel"
+                    value={cpf}
+                    onChange={(e) => setCpf(formatCPF(e.target.value))}
+                    className="w-full border border-border rounded-xl px-4 py-3 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring"
+                    placeholder="000.000.000-00"
+                  />
+                </div>
                 <div className="border-2 border-dashed border-border rounded-xl p-4 space-y-3">
                   <p className="font-bold text-sm text-foreground">
                     Usamos seus dados de forma 100% segura para garantir a sua satisfação:
@@ -609,6 +628,8 @@ const CheckoutPage = () => {
                     const phoneDigits = phone.replace(/\D/g, "");
                     if (!name.trim()) { toast.error("Preencha o nome completo"); return; }
                     if (phoneDigits.length < 10) { toast.error("Preencha o telefone corretamente"); return; }
+                    const cpfDigits = cpf.replace(/\D/g, "");
+                    if (cpfDigits.length !== 11) { toast.error("Preencha o CPF corretamente"); return; }
                     if (!noEmail && email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast.error("E-mail inválido"); return; }
                     ttqIdentify({ email: email || undefined, phone_number: phone });
                     trackTikTokEvent("ClickButton", { content_name: "ir_para_entrega" }, { email: email || undefined, phone: phone || undefined });
