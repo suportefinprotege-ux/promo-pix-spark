@@ -5,7 +5,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const PUSHINPAY_API_URL = "https://api.pushinpay.com.br/api/transaction";
+const BLACKCATPAY_API_URL = "https://api.blackcatpay.com.br/api/sales";
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -13,9 +13,9 @@ serve(async (req) => {
   }
 
   try {
-    const PUSHINPAY_API_TOKEN = Deno.env.get("PUSHINPAY_API_TOKEN");
-    if (!PUSHINPAY_API_TOKEN) {
-      throw new Error("PUSHINPAY_API_TOKEN is not configured");
+    const BLACKCATPAY_SECRET_KEY = Deno.env.get("BLACKCATPAY_SECRET_KEY");
+    if (!BLACKCATPAY_SECRET_KEY) {
+      throw new Error("BLACKCATPAY_SECRET_KEY is not configured");
     }
 
     const url = new URL(req.url);
@@ -28,16 +28,14 @@ serve(async (req) => {
       );
     }
 
-    // Try both endpoint variants
-    let response = await fetch(`${PUSHINPAY_API_URL}/${transactionId}`, {
+    const response = await fetch(`${BLACKCATPAY_API_URL}/${transactionId}/status`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${PUSHINPAY_API_TOKEN}`,
-        Accept: "application/json",
+        "X-API-Key": BLACKCATPAY_SECRET_KEY,
       },
     });
 
-    let data = await response.json();
+    const data = await response.json();
     console.log("check-pix response:", JSON.stringify(data));
 
     if (!response.ok) {
@@ -47,7 +45,19 @@ serve(async (req) => {
       );
     }
 
-    return new Response(JSON.stringify(data), {
+    // Normalize: BlackCatPay returns status as PENDING/PAID/CANCELLED/REFUNDED
+    const rawStatus = data.data?.status || data.status || "PENDING";
+    const statusMap: Record<string, string> = {
+      PENDING: "pending",
+      PAID: "paid",
+      CANCELLED: "cancelled",
+      REFUNDED: "refunded",
+    };
+
+    return new Response(JSON.stringify({
+      status: statusMap[rawStatus] || rawStatus.toLowerCase(),
+      transactionId: data.data?.transactionId || transactionId,
+    }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
