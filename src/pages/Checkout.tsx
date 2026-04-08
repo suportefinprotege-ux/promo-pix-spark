@@ -86,8 +86,32 @@ const CheckoutPage = () => {
       const shippingTotal = freeShipping ? 0 : (selectedOption?.price || 0);
       const totalCentsValue = cartTotalCents + shippingTotal;
 
+      const phoneDigits = phone.replace(/\D/g, "");
       const { data, error } = await supabase.functions.invoke("create-pix", {
-        body: { value: totalCentsValue },
+        body: {
+          value: totalCentsValue,
+          customer: {
+            name: name,
+            email: email || "sem@email.com",
+            phone: phoneDigits,
+            document: { number: "00000000000", type: "cpf" },
+          },
+          items: items.map((item) => ({
+            title: item.name,
+            unitPrice: item.price,
+            quantity: item.quantity,
+            tangible: true,
+          })),
+          shipping: {
+            name: name,
+            street: endereco,
+            number: numero,
+            neighborhood: bairro,
+            city: cidade,
+            state: estado,
+            zipCode: cep.replace(/\D/g, ""),
+          },
+        },
       });
       if (error) throw error;
 
