@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Copy, Check, Loader2, Minus, Plus, ChevronDown, ShieldCheck, ArrowLeft, Smartphone, QrCode, CheckCircle2 } from "lucide-react";
+import { Copy, Check, Loader2, Minus, Plus, ChevronDown, ShieldCheck, ArrowLeft, Smartphone, QrCode as QrCodeIcon, CheckCircle2 } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 import { supabase } from "@/integrations/supabase/client";
 import { useCart } from "@/contexts/CartContext";
 import { ttqIdentify } from "@/lib/tiktok-pixel";
