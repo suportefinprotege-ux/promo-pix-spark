@@ -335,11 +335,12 @@ const CheckoutPage = () => {
 
           {/* QR Code */}
           <div className="flex justify-center py-4">
-            {pixData?.qr_code_base64 ? (
-              <img
-                src={pixData.qr_code_base64}
-                alt="QR Code Pix"
-                className="w-56 h-56"
+            {pixData?.qr_code ? (
+              <QRCodeSVG
+                value={pixData.qr_code}
+                size={224}
+                level="M"
+                className="rounded-xl"
               />
             ) : (
               <div className="w-56 h-56 bg-secondary rounded-xl flex items-center justify-center">
