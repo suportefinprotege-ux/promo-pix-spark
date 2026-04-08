@@ -384,7 +384,7 @@ const CheckoutPage = () => {
             <div className="space-y-3">
               {[
                 { icon: <Smartphone className="w-5 h-5" />, text: "Abra o app do seu banco e entre no ambiente Pix" },
-                { icon: <QrCode className="w-5 h-5" />, text: "Escolha Pagar com QR Code e aponte a câmera para o código acima." },
+                { icon: <QrCodeIcon className="w-5 h-5" />, text: "Escolha Pagar com QR Code e aponte a câmera para o código acima." },
                 { icon: <CheckCircle2 className="w-5 h-5" />, text: "Confirme as informações e finalize sua compra." },
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3">
