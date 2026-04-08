@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Copy, Check, Loader2, Minus, Plus, ChevronDown, ShieldCheck, ArrowLeft, Smartphone, QrCode, CheckCircle2 } from "lucide-react";
+import { Copy, Check, Loader2, Minus, Plus, ChevronDown, ShieldCheck, ArrowLeft, Smartphone, QrCode as QrCodeIcon, CheckCircle2 } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 import { supabase } from "@/integrations/supabase/client";
 import { useCart } from "@/contexts/CartContext";
 import { ttqIdentify } from "@/lib/tiktok-pixel";
@@ -334,11 +335,12 @@ const CheckoutPage = () => {
 
           {/* QR Code */}
           <div className="flex justify-center py-4">
-            {pixData?.qr_code_base64 ? (
-              <img
-                src={pixData.qr_code_base64}
-                alt="QR Code Pix"
-                className="w-56 h-56"
+            {pixData?.qr_code ? (
+              <QRCodeSVG
+                value={pixData.qr_code}
+                size={224}
+                level="M"
+                className="rounded-xl"
               />
             ) : (
               <div className="w-56 h-56 bg-secondary rounded-xl flex items-center justify-center">
@@ -383,7 +385,7 @@ const CheckoutPage = () => {
             <div className="space-y-3">
               {[
                 { icon: <Smartphone className="w-5 h-5" />, text: "Abra o app do seu banco e entre no ambiente Pix" },
-                { icon: <QrCode className="w-5 h-5" />, text: "Escolha Pagar com QR Code e aponte a câmera para o código acima." },
+                { icon: <QrCodeIcon className="w-5 h-5" />, text: "Escolha Pagar com QR Code e aponte a câmera para o código acima." },
                 { icon: <CheckCircle2 className="w-5 h-5" />, text: "Confirme as informações e finalize sua compra." },
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3">
