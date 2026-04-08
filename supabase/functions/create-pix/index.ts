@@ -5,7 +5,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const PUSHINPAY_API_URL = "https://api.pushinpay.com.br/api/pix/cashIn";
+const BLACKCATPAY_API_URL = "https://api.blackcatpay.com.br/api/sales/create-sale";
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -13,12 +13,12 @@ serve(async (req) => {
   }
 
   try {
-    const PUSHINPAY_API_TOKEN = Deno.env.get("PUSHINPAY_API_TOKEN");
-    if (!PUSHINPAY_API_TOKEN) {
-      throw new Error("PUSHINPAY_API_TOKEN is not configured");
+    const BLACKCATPAY_SECRET_KEY = Deno.env.get("BLACKCATPAY_SECRET_KEY");
+    if (!BLACKCATPAY_SECRET_KEY) {
+      throw new Error("BLACKCATPAY_SECRET_KEY is not configured");
     }
 
-    const { value, webhook_url } = await req.json();
+    const { value, customer, items, shipping } = await req.json();
 
     if (!value || typeof value !== "number" || value < 50) {
       return new Response(
@@ -27,32 +27,61 @@ serve(async (req) => {
       );
     }
 
-    const body: Record<string, unknown> = { value };
-    if (webhook_url) {
-      body.webhook_url = webhook_url;
+    const body: Record<string, unknown> = {
+      amount: value,
+      currency: "BRL",
+      paymentMethod: "pix",
+      items: items || [
+        {
+          title: "Pedido",
+          unitPrice: value,
+          quantity: 1,
+          tangible: true,
+        },
+      ],
+      customer: customer || {
+        name: "Cliente",
+        email: "cliente@email.com",
+        phone: "00000000000",
+        document: { number: "00000000000", type: "cpf" },
+      },
+      pix: { expiresInDays: 1 },
+    };
+
+    if (shipping) {
+      body.shipping = shipping;
     }
 
-    const response = await fetch(PUSHINPAY_API_URL, {
+    console.log("BlackCatPay request body:", JSON.stringify(body));
+
+    const response = await fetch(BLACKCATPAY_API_URL, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${PUSHINPAY_API_TOKEN}`,
-        Accept: "application/json",
         "Content-Type": "application/json",
+        "X-API-Key": BLACKCATPAY_SECRET_KEY,
       },
       body: JSON.stringify(body),
     });
 
     const data = await response.json();
+    console.log("BlackCatPay response:", JSON.stringify(data));
 
-    if (!response.ok) {
-      console.error("PushInPay error:", JSON.stringify(data));
+    if (!response.ok || !data.success) {
       return new Response(
         JSON.stringify({ error: "Erro ao criar cobrança Pix", details: data }),
         { status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    return new Response(JSON.stringify(data), {
+    // Normalize response to match frontend expectations
+    const normalized = {
+      id: data.data.transactionId,
+      qr_code: data.data.paymentData?.copyPaste || data.data.paymentData?.qrCode || "",
+      qr_code_base64: data.data.paymentData?.qrCodeBase64 || "",
+      status: data.data.status?.toLowerCase() || "pending",
+    };
+
+    return new Response(JSON.stringify(normalized), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
