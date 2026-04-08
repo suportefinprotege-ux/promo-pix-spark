@@ -27,6 +27,7 @@ const CheckoutPage = () => {
   const [noEmail, setNoEmail] = useState(false);
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
+  const [cpf, setCpf] = useState("");
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [subStep, setSubStep] = useState<SubStep>("form");
   const [loading, setLoading] = useState(false);
